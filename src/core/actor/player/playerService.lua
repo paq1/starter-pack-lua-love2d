@@ -52,7 +52,13 @@ function PlayerService:new(
     end
 
     function this:draw()
-        self.anim:draw(self.sideIndex, 4, self.player.position)
+
+        local drawPos = {
+            x = self.player.position.x - self.player.size.x / 2.0,
+            y = self.player.position.y - self.player.size.y / 2.0
+        }
+
+        self.anim:draw(self.sideIndex, 4, drawPos)
     end
 
     return this
