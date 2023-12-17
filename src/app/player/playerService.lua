@@ -1,10 +1,10 @@
 local PlayerService = {}
 
 local playerModule = require("src/core/actor/player/player")
-local animation = require("src/app/animation")
 
 function PlayerService:new(
-        inputService --[[KeyboardService]]
+        inputService --[[KeyboardService]],
+        animationPlayer --[[Animation]]
 )
     local positionInitial = {
         x = 0,
@@ -14,16 +14,15 @@ function PlayerService:new(
         x = 32,
         y = 32
     }
-    local snakeSpritesheet = love.graphics.newImage("assets/sprites/actor/Snake.png")
     local this = {
         inputService = inputService,
         sideIndex = 0,
-        anim = animation.newAnimation(snakeSpritesheet, 16, 16, 1),
+        anim = animationPlayer,
         player = playerModule.new(positionInitial, size)
     }
 
     function this:update(dt)
-        animation.update(dt, self.anim, false)
+        self.anim:update(dt, false)
 
         self:updateDeplacement(dt)
     end
@@ -53,7 +52,7 @@ function PlayerService:new(
     end
 
     function this:draw()
-        animation.draw(self.anim, self.sideIndex, 4, self.player.position)
+        self.anim:draw(self.sideIndex, 4, self.player.position)
     end
 
     return this
