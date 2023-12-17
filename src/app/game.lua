@@ -30,25 +30,15 @@ function game_app.update(dt)
 end
 
 function game_app.draw()
-    mapService:render()
-
+    mapService:render(playerService.player)
     playerService:draw()
 
     printFps()
-    printCurrentCoordPlayerOnMap({ x = 0, y = 32 })
-end
-
-function printCurrentCoordPlayerOnMap(at)
-    at = at or { x = 0, y = 0 }
-    local pos = playerService.player.position
-    local coord = mapService.map:getCoordTile(pos)
-
-    love.graphics.print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", at.x, at.y)
 end
 
 function printFps(at)
     at = at or { x = 0, y = 0 }
-    love.graphics.print("fps : " .. love.timer.getFPS())
+    rendererService:print("fps : " .. love.timer.getFPS())
 end
 
 return game_app

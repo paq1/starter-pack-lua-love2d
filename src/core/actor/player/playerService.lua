@@ -7,8 +7,8 @@ function PlayerService:new(
         animationPlayer --[[Animation]]
 )
     local positionInitial = {
-        x = 0,
-        y = 0
+        x = 300,
+        y = 150
     }
     local size = {
         x = 32,
