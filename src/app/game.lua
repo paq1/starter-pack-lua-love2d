@@ -7,8 +7,8 @@ local KeyboardService = require("src/app/keyboard/KeyboardService")
 function game_app.load()
     loaded = false
     whale = love.graphics.newImage("assets/sprites/actor/whale.png")
-    ks = KeyboardService:new()
-    playerService = PlayerService:new(ks)
+    keyboardService = KeyboardService:new()
+    playerService = PlayerService:new(keyboardService)
     loaded = true
     print("loaded\n")
 end
