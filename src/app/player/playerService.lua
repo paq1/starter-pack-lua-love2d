@@ -1,6 +1,6 @@
 local PlayerService = {}
 
-local playerModule = require("src/core/actor/player/player")
+local Player = require("src/core/actor/player/player")
 
 function PlayerService:new(
         inputService --[[KeyboardService]],
@@ -18,7 +18,7 @@ function PlayerService:new(
         inputService = inputService,
         sideIndex = 0,
         anim = animationPlayer,
-        player = playerModule.new(positionInitial, size)
+        player = Player:new(positionInitial, size)
     }
 
     function this:update(dt)

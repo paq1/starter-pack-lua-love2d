@@ -1,12 +1,12 @@
-local player_module = {}
+local Player = {}
 
-function player_module.new(position, size)
-    local player = {
+function Player:new(position, size)
+    local this = {
         position = position,
         size = size
     }
 
-    return player
+    return this
 end
 
-return player_module
+return Player
