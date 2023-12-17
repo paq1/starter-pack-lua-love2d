@@ -1,0 +1,1 @@
+"C:\Program Files\love\love.exe" "D:\development\lua\starter-pack"
