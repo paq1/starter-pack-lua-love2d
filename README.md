@@ -11,8 +11,9 @@
 ## todo
 
 <ul>
-    <li>arbre et algo de pathfinding</li>
+    <li>collisions</li>
     <li>gestion massive d'element sur la map</li>
+    <li>arbre et algo de pathfinding</li>
     <li>... etc</li>
 </ul>
 
