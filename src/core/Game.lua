@@ -1,6 +1,6 @@
 local Game = {}
 
-local PlayerService = require("src/core/actor/player/playerService")
+local PlayerService = require("src/core/actor/player/PlayerService")
 local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
@@ -18,7 +18,7 @@ function Game:new(
         animationService = animationService
     }
     this.mapService = MapService:new(
-            Map:new({ x = 3000, y = 3000 }, 32),
+            Map:new({ x = 20, y = 10 }, 32),
             this.imageFactory,
             this.rendererService
     )

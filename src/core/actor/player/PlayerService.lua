@@ -1,6 +1,6 @@
 local PlayerService = {}
 
-local Player = require("src/core/actor/player/player")
+local Player = require("src/core/actor/player/Player")
 
 function PlayerService:new(
         inputService --[[KeyboardService]],
