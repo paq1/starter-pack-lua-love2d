@@ -20,8 +20,23 @@ function MapService:new(
         local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
         local minRow = math.floor(player.position.y / 32.0) - offset
         local minCol = math.floor(player.position.x / 32.0) - offset
-        local maxRow = math.floor(player.position.y / 32.0) + offset
-        local maxCol = math.floor(player.position.x / 32.0) + offset
+
+        local maxRowPlayer = math.floor(player.position.y / 32.0) + offset
+        local maxColPlayer = math.floor(player.position.x / 32.0) + offset
+
+        local maxRowFromMap = #self.map.tilemap
+        local maxColFromMap = #self.map.tilemap[1]
+
+        local maxRow = maxRowPlayer
+        local maxCol = maxColPlayer
+
+        if maxRowPlayer > maxRowFromMap then
+            maxRow = maxRowFromMap
+        end
+
+        if maxColPlayer > maxColFromMap then
+            maxCol = maxColFromMap
+        end
 
         for l = minRow,maxRow do
             for c = minCol, maxCol do
