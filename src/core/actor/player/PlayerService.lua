@@ -23,36 +23,65 @@ function PlayerService:new(
 
     function this:update(
             dt,
-            cameraService --[[CameraService]]
+            cameraService --[[CameraService]],
+            map --[[Map]]
     )
         self.anim:update(dt, false)
 
-        self:updateDeplacement(dt)
+        self:updateDeplacement(dt, 200, map)
 
         cameraService:updatePosition(self.player.position)
     end
 
-    function this:updateDeplacement(dt, vitesse)
+    function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
 
         if self.inputService:upIsDown() then
             self.sideIndex = 2
-            self.player.position.y = self.player.position.y - vitesse * dt
+            local nouvellePosition = {
+                x = self.player.position.x,
+                y = self.player.position.y - vitesse * dt
+            }
+            local tile = map:getTileAt(nouvellePosition)
+            if tile ~= -1 then
+                self.player.position = nouvellePosition
+            end
         end
 
         if self.inputService:rightIsDown() then
             self.sideIndex = 0
-            self.player.position.x = self.player.position.x + vitesse * dt
+            local nouvellePosition = {
+                x = self.player.position.x + vitesse * dt,
+                y = self.player.position.y
+            }
+            local tile = map:getTileAt(nouvellePosition)
+            if tile ~= -1 then
+                self.player.position = nouvellePosition
+            end
         end
 
         if self.inputService:downIsDown() then
             self.sideIndex = 3
-            self.player.position.y = self.player.position.y + vitesse * dt
+            local nouvellePosition = {
+                x = self.player.position.x,
+                y = self.player.position.y + vitesse * dt
+            }
+            local tile = map:getTileAt(nouvellePosition)
+            if tile ~= -1 then
+                self.player.position = nouvellePosition
+            end
         end
 
         if self.inputService:leftIsDown() then
             self.sideIndex = 1
-            self.player.position.x = self.player.position.x - vitesse * dt
+            local nouvellePosition = {
+                x = self.player.position.x - vitesse * dt,
+                y = self.player.position.y
+            }
+            local tile = map:getTileAt(nouvellePosition)
+            if tile ~= -1 then
+                self.player.position = nouvellePosition
+            end
         end
     end
 

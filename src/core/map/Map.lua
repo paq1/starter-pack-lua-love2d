@@ -30,6 +30,15 @@ function Map:new(size, tileSize)
         return {x = col, y = row}
     end
 
+    function this:getTileAt(position)
+        local coord = self:getCoordTile(position)
+        if coord.x < 1 or coord.x > #self.tilemap[1] or coord.y < 1 or coord.y > #self.tilemap then
+            return -1
+        else
+            return self.tilemap[coord.y][coord.x]
+        end
+    end
+
     return this
 end
 

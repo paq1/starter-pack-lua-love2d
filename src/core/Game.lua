@@ -29,7 +29,7 @@ function Game:new(
     this.cameraService = CameraService:new()
 
     function this:update(dt)
-        self.playerService:update(dt, this.cameraService)
+        self.playerService:update(dt, this.cameraService, this.mapService.map)
     end
 
     function this:draw()
