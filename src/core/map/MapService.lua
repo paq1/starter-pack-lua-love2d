@@ -12,7 +12,7 @@ function MapService:new(
     }
 
     function this:render(
-            player,
+            player --[[Player]],
             cameraService --[[CameraService]]
     )
 
