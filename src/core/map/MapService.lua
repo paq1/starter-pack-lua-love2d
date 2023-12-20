@@ -16,13 +16,14 @@ function MapService:new(
             cameraService --[[CameraService]]
     )
 
+        local tileSize = self.map.tileSize
         local camPos = cameraService.position
         local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
-        local minRow = math.floor(player.position.y / 32.0) - offset
-        local minCol = math.floor(player.position.x / 32.0) - offset
+        local minRow = math.floor(player.position.y / tileSize) - offset
+        local minCol = math.floor(player.position.x / tileSize) - offset
 
-        local maxRowPlayer = math.floor(player.position.y / 32.0) + offset
-        local maxColPlayer = math.floor(player.position.x / 32.0) + offset
+        local maxRowPlayer = math.floor(player.position.y / tileSize) + offset
+        local maxColPlayer = math.floor(player.position.x / tileSize) + offset
 
         local maxRowFromMap = #self.map.tilemap
         local maxColFromMap = #self.map.tilemap[1]
@@ -44,7 +45,8 @@ function MapService:new(
                     local tile = self.map.tilemap[l][c]
                     if tile == 1 then
                         self.rendererService:render(
-                                self.imageFactory.tileGrassImage, { x = c * 32 - camPos.x, y = l * 32 - camPos.y }
+                                self.imageFactory.tileGrassImage,
+                                { x = c * tileSize - camPos.x, y = l * tileSize - camPos.y }
                         )
                     end
                 end
