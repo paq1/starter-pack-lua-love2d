@@ -3,6 +3,7 @@ local Game = {}
 local PlayerService = require("src/core/actor/player/playerService")
 local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
+local CameraService = require("src/core/camera/CameraService")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -25,14 +26,15 @@ function Game:new(
             this.keyboardService,
             this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1)
     )
+    this.cameraService = CameraService:new()
 
     function this:update(dt)
-        self.playerService:update(dt)
+        self.playerService:update(dt, this.cameraService)
     end
 
     function this:draw()
-        self.mapService:render(self.playerService.player)
-        self.playerService:draw()
+        self.mapService:render(self.playerService.player, self.cameraService)
+        self.playerService:draw(self.cameraService)
     end
 
     return this

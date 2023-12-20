@@ -21,10 +21,15 @@ function PlayerService:new(
         player = Player:new(positionInitial, size)
     }
 
-    function this:update(dt)
+    function this:update(
+            dt,
+            cameraService --[[CameraService]]
+    )
         self.anim:update(dt, false)
 
         self:updateDeplacement(dt)
+
+        cameraService:updatePosition(self.player.position)
     end
 
     function this:updateDeplacement(dt, vitesse)
@@ -51,11 +56,13 @@ function PlayerService:new(
         end
     end
 
-    function this:draw()
+    function this:draw(
+            cameraService --[[CameraService]]
+    )
 
         local drawPos = {
-            x = self.player.position.x - self.player.size.x / 2.0,
-            y = self.player.position.y - self.player.size.y / 2.0
+            x = self.player.position.x - self.player.size.x / 2.0 - cameraService.position.x,
+            y = self.player.position.y - self.player.size.y / 2.0 - cameraService.position.y
         }
 
         self.anim:draw(self.sideIndex, 4, drawPos)

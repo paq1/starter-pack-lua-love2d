@@ -11,14 +11,17 @@ function MapService:new(
         rendererService = rendererService
     }
 
-    function this:render(playerService)
+    function this:render(
+            player,
+            cameraService --[[CameraService]]
+    )
         for l = 0, self.map.size.y do
             for c = 0, self.map.size.x do
-                self.rendererService:render(self.imageFactory.tileGrassImage, { x = c * 32, y = l * 32 })
+                self.rendererService:render(self.imageFactory.tileGrassImage, { x = c * 32 - cameraService.position.x, y = l * 32 - cameraService.position.y })
             end
         end
 
-        self:printCurrentCoordPlayerOnMap({ x = 0, y = 32 }, playerService)
+        self:printCurrentCoordPlayerOnMap({ x = 0, y = 32 }, player)
     end
 
     function this:printCurrentCoordPlayerOnMap(at, player)
