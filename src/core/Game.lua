@@ -18,7 +18,7 @@ function Game:new(
         animationService = animationService
     }
     this.mapService = MapService:new(
-            Map:new({ x = 25, y = 10 }, 32),
+            Map:new({ x = 3000, y = 3000 }, 32),
             this.imageFactory,
             this.rendererService
     )

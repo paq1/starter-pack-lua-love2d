@@ -8,9 +8,21 @@ function Map:new(size, tileSize)
     }
 
     local this = {
-        size = size,
         tileSize = tileSize
     }
+
+    function loadMap(nbRow, nbCol)
+        local rows = {}
+        for r = 1, nbRow do
+            local cols = {}
+            for c = 1, nbCol do
+                table.insert(cols, 1)
+            end
+            table.insert(rows, cols)
+        end
+        return rows
+    end
+    this.tilemap = loadMap(size.y, size.x)
 
     function this:getCoordTile(position)
         local row = math.floor(position.y / self.tileSize)
