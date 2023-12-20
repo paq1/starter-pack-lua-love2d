@@ -1,13 +1,13 @@
-local game = require("src/app/game")
+local app = require("src/app/App")
 
 function love.load()
-    game.load()
+    app.load()
 end
 
 function love.update(dt)
-    game.update(dt)
+    app.update(dt)
 end
 
 function love.draw()
-    game.draw()
+    app.draw()
 end
