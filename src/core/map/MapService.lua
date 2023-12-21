@@ -12,38 +12,56 @@ function MapService:new(
         imageFactory = imageFactory,
         rendererService = rendererService,
         audioService = audioService,
-        playerService = playerService
+        playerService = playerService,
+        ordoringElements = {}
     }
 
-    this.ordoringElements = {}
+    function this:minRowAndCol()
+        local playerPos = self.playerService.player.position
+
+        local tileSize = self.map.tileSize
+        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
+        local minRow = math.floor(playerPos.y / tileSize) - offset
+        local minCol = math.floor(playerPos.x / tileSize) - offset
+
+        return {
+            row = minRow,
+            col = minCol
+        }
+    end
+
+    function this:maxRowAndCol()
+        local playerPos = self.playerService.player.position
+        local tileSize = self.map.tileSize
+        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
+        local maxRowPlayer = math.floor(playerPos.y / tileSize) + offset
+        local maxColPlayer = math.floor(playerPos.x / tileSize) + offset
+        local maxRowFromMap = #self.map.tilemap
+        local maxColFromMap = #self.map.tilemap[1]
+        local maxRow = maxRowPlayer
+        local maxCol = maxColPlayer
+        if maxRowPlayer > maxRowFromMap then
+            maxRow = maxRowFromMap
+        end
+        if maxColPlayer > maxColFromMap then
+            maxCol = maxColFromMap
+        end
+        return {
+            row = maxRow,
+            col = maxCol
+        }
+    end
 
     function this:getElementsForDraw(cameraService)
         local elements = {}
 
-        local player = self.playerService.player
-
         local tileSize = self.map.tileSize
         local camPos = cameraService.position
-        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
-        local minRow = math.floor(player.position.y / tileSize) - offset
-        local minCol = math.floor(player.position.x / tileSize) - offset
 
-        local maxRowPlayer = math.floor(player.position.y / tileSize) + offset
-        local maxColPlayer = math.floor(player.position.x / tileSize) + offset
-
-        local maxRowFromMap = #self.map.tilemap
-        local maxColFromMap = #self.map.tilemap[1]
-
-        local maxRow = maxRowPlayer
-        local maxCol = maxColPlayer
-
-        if maxRowPlayer > maxRowFromMap then
-            maxRow = maxRowFromMap
-        end
-
-        if maxColPlayer > maxColFromMap then
-            maxCol = maxColFromMap
-        end
+        local minRowAndCol = self:minRowAndCol()
+        local minRow, minCol = minRowAndCol.row, minRowAndCol.col
+        local maxRowAndCol = self:maxRowAndCol()
+        local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
         for l = minRow, maxRow do
             for c = minCol, maxCol do
@@ -94,26 +112,11 @@ function MapService:new(
 
         local tileSize = self.map.tileSize
         local camPos = cameraService.position
-        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
-        local minRow = math.floor(player.position.y / tileSize) - offset
-        local minCol = math.floor(player.position.x / tileSize) - offset
 
-        local maxRowPlayer = math.floor(player.position.y / tileSize) + offset
-        local maxColPlayer = math.floor(player.position.x / tileSize) + offset
-
-        local maxRowFromMap = #self.map.tilemap
-        local maxColFromMap = #self.map.tilemap[1]
-
-        local maxRow = maxRowPlayer
-        local maxCol = maxColPlayer
-
-        if maxRowPlayer > maxRowFromMap then
-            maxRow = maxRowFromMap
-        end
-
-        if maxColPlayer > maxColFromMap then
-            maxCol = maxColFromMap
-        end
+        local minRowAndCol = self:minRowAndCol()
+        local minRow, minCol = minRowAndCol.row, minRowAndCol.col
+        local maxRowAndCol = self:maxRowAndCol()
+        local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
         for l = minRow, maxRow do
             for c = minCol, maxCol do
