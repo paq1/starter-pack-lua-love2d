@@ -9,26 +9,32 @@ function Game:new(
         keyboardService --[[KeyboardService]],
         rendererService --[[RendererService]],
         imageFactory --[[ImageFactory]],
-        animationService --[[AnimationService]]
+        animationService --[[AnimationService]],
+        audioService --[[AudioService]]
 )
     local this = {
         keyboardService = keyboardService,
         rendererService = rendererService,
         imageFactory = imageFactory,
-        animationService = animationService
+        animationService = animationService,
+        audioService = audioService
     }
     this.mapService = MapService:new(
             Map:new({ x = 20, y = 10 }, 32),
             this.imageFactory,
-            this.rendererService
+            this.rendererService,
+            this.audioService
     )
     this.playerService = PlayerService:new(
             this.keyboardService,
-            this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1)
+            this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1),
+            this.audioService
     )
     this.cameraService = CameraService:new()
 
     function this:update(dt)
+        self.audioService:update()
+        self.mapService:update(dt)
         self.playerService:update(dt, this.cameraService, this.mapService.map)
     end
 

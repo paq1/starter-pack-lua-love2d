@@ -4,7 +4,8 @@ local Player = require("src/core/actor/player/Player")
 
 function PlayerService:new(
         inputService --[[KeyboardService]],
-        animationPlayer --[[Animation]]
+        animation --[[Animation]],
+        audioService --[[AudioService]]
 )
     local positionInitial = {
         x = 300,
@@ -17,7 +18,8 @@ function PlayerService:new(
     local this = {
         inputService = inputService,
         sideIndex = 0,
-        anim = animationPlayer,
+        anim = animation,
+        audioService = audioService,
         player = Player:new(positionInitial, size)
     }
 
@@ -28,13 +30,20 @@ function PlayerService:new(
     )
         self.anim:update(dt, false)
 
-        self:updateDeplacement(dt, 200, map)
+        local seDeplace = self:updateDeplacement(dt, 200, map)
+
+        if seDeplace then
+            self.audioService:setStepSongStatus(true)
+        else
+            self.audioService:setStepSongStatus(false)
+        end
 
         cameraService:updatePosition(self.player.position)
     end
 
     function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
+        local seDeplace = false
 
         if self.inputService:upIsDown() then
             self.sideIndex = 2
@@ -45,6 +54,7 @@ function PlayerService:new(
             local tile = map:getTileAt(nouvellePosition)
             if tile ~= -1 then
                 self.player.position = nouvellePosition
+                seDeplace = true
             end
         end
 
@@ -57,6 +67,7 @@ function PlayerService:new(
             local tile = map:getTileAt(nouvellePosition)
             if tile ~= -1 then
                 self.player.position = nouvellePosition
+                seDeplace = true
             end
         end
 
@@ -69,6 +80,7 @@ function PlayerService:new(
             local tile = map:getTileAt(nouvellePosition)
             if tile ~= -1 then
                 self.player.position = nouvellePosition
+                seDeplace = true
             end
         end
 
@@ -81,8 +93,11 @@ function PlayerService:new(
             local tile = map:getTileAt(nouvellePosition)
             if tile ~= -1 then
                 self.player.position = nouvellePosition
+                seDeplace = true
             end
         end
+
+        return seDeplace
     end
 
     function this:draw(

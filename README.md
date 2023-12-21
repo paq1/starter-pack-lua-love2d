@@ -5,12 +5,13 @@
 ## wip
 
 <ul>
-    <li>affiche de la map</li>
+    <li>...</li>
 </ul>
 
 ## todo
 
 <ul>
+    <li>scene (menu, jeu ... etc)</li>
     <li>collisions</li>
     <li>gestion massive d'element sur la map</li>
     <li>arbre et algo de pathfinding</li>
@@ -20,6 +21,7 @@
 ## done
 
 <ul>
+    <li>service de sons</li>
     <li>affiche d'une grande map disponible</li>
     <li>camera</li>
     <li>animations avec des quads</li>

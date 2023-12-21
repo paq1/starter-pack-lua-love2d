@@ -3,13 +3,19 @@ local MapService = {}
 function MapService:new(
         map --[[Map]],
         imageFactory --[[ImageFactory]],
-        rendererService --[[RendererService]]
+        rendererService --[[RendererService]],
+        audioService --[[AudioService]]
 )
     local this = {
         map = map,
         imageFactory = imageFactory,
-        rendererService = rendererService
+        rendererService = rendererService,
+        audioService = audioService
     }
+
+    function this:update(dt)
+        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+    end
 
     function this:render(
             player --[[Player]],
