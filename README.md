@@ -1,6 +1,7 @@
 # starter pack  lua love2D
 
-![alt text](./docs/screenShootStarter.png)
+![alt text](./docs/screenShootStarter2.png)
+![alt text](./docs/screenShootStarter3.png)
 
 ## wip
 
@@ -13,7 +14,6 @@
 <ul>
     <li>scene (menu, jeu ... etc)</li>
     <li>collisions</li>
-    <li>gestion massive d'element sur la map</li>
     <li>arbre et algo de pathfinding</li>
     <li>... etc</li>
 </ul>
@@ -22,6 +22,7 @@
 
 <ul>
     <li>service de sons</li>
+    <li>gestion massive d'element sur la map</li>
     <li>affiche d'une grande map disponible</li>
     <li>camera</li>
     <li>animations avec des quads</li>

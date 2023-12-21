@@ -28,7 +28,7 @@ function Game:new(
     )
 
     this.mapService = MapService:new(
-            Map:new({ x = 30, y = 30 }, 32, this.randomService),
+            Map:new({ x = 3000, y = 3000 }, 32, this.randomService),
             this.imageFactory,
             this.rendererService,
             this.audioService,
