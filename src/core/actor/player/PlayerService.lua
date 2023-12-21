@@ -41,60 +41,48 @@ function PlayerService:new(
         cameraService:updatePosition(self.player.position)
     end
 
+    -- return true si le joueur a bougé sinon false
+    function this:movingPlayer(vecteurDeplacement, map --[[Map]])
+        local nouvellePosition = {
+            x = self.player.position.x + vecteurDeplacement.x,
+            y = self.player.position.y + vecteurDeplacement.y
+        }
+        local tile = map:getTileAt(nouvellePosition)
+        if tile ~= -1 then
+            self.player.position = nouvellePosition
+           return true
+        end
+
+        return false
+    end
+
+    -- return true si le joueur a bougé sinon false
     function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
         local seDeplace = false
 
         if self.inputService:upIsDown() then
             self.sideIndex = 2
-            local nouvellePosition = {
-                x = self.player.position.x,
-                y = self.player.position.y - vitesse * dt
-            }
-            local tile = map:getTileAt(nouvellePosition)
-            if tile ~= -1 then
-                self.player.position = nouvellePosition
-                seDeplace = true
-            end
+            local isMoving = self:movingPlayer({ x = 0, y = - vitesse * dt}, map)
+            if isMoving then seDeplace = true end
         end
 
         if self.inputService:rightIsDown() then
             self.sideIndex = 0
-            local nouvellePosition = {
-                x = self.player.position.x + vitesse * dt,
-                y = self.player.position.y
-            }
-            local tile = map:getTileAt(nouvellePosition)
-            if tile ~= -1 then
-                self.player.position = nouvellePosition
-                seDeplace = true
-            end
+            local isMoving = self:movingPlayer({ x = vitesse * dt, y = 0}, map)
+            if isMoving then seDeplace = true end
         end
 
         if self.inputService:downIsDown() then
             self.sideIndex = 3
-            local nouvellePosition = {
-                x = self.player.position.x,
-                y = self.player.position.y + vitesse * dt
-            }
-            local tile = map:getTileAt(nouvellePosition)
-            if tile ~= -1 then
-                self.player.position = nouvellePosition
-                seDeplace = true
-            end
+            local isMoving = self:movingPlayer({ x = 0, y = vitesse * dt}, map)
+            if isMoving then seDeplace = true end
         end
 
         if self.inputService:leftIsDown() then
             self.sideIndex = 1
-            local nouvellePosition = {
-                x = self.player.position.x - vitesse * dt,
-                y = self.player.position.y
-            }
-            local tile = map:getTileAt(nouvellePosition)
-            if tile ~= -1 then
-                self.player.position = nouvellePosition
-                seDeplace = true
-            end
+            local isMoving = self:movingPlayer({ x = - vitesse * dt, y = 0}, map)
+            if isMoving then seDeplace = true end
         end
 
         return seDeplace
