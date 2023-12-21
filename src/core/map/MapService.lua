@@ -4,23 +4,23 @@ function MapService:new(
         map --[[Map]],
         imageFactory --[[ImageFactory]],
         rendererService --[[RendererService]],
-        audioService --[[AudioService]]
+        audioService --[[AudioService]],
+        playerService --[[PlayerService]]
 )
     local this = {
         map = map,
         imageFactory = imageFactory,
         rendererService = rendererService,
-        audioService = audioService
+        audioService = audioService,
+        playerService = playerService
     }
 
-    function this:update(dt)
-        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
-    end
+    this.ordoringElements = {}
 
-    function this:render(
-            player --[[Player]],
-            cameraService --[[CameraService]]
-    )
+    function this:getElementsForDraw(cameraService)
+        local elements = {}
+
+        local player = self.playerService.player
 
         local tileSize = self.map.tileSize
         local camPos = cameraService.position
@@ -45,7 +45,77 @@ function MapService:new(
             maxCol = maxColFromMap
         end
 
-        for l = minRow,maxRow do
+        for l = minRow, maxRow do
+            for c = minCol, maxCol do
+                if l > 0 and c > 0 then
+                    local arbre = self.map.arbres[l][c]
+                    if arbre == 1 then
+                        table.insert(
+                                elements,
+                                {
+                                    position = { x = c * tileSize - camPos.x, y = l * tileSize - camPos.y - 32.0 },
+                                    elementType = "arbre"
+                                }
+                        )
+                    end
+                end
+            end
+        end
+
+        return elements
+    end
+
+    function compareElement(element1, element2)
+
+        if element1.elementType == "player" then
+            return element1.position.y - 32 < element2.position.y
+        end
+
+        if element2.elementType == "player" then
+            return element1.position.y < element2.position.y - 32
+        end
+
+        return element1.position.y < element2.position.y
+    end
+
+    function this:update(dt, cameraService --[[CameraService]])
+        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+
+        local elements = self:getElementsForDraw(cameraService --[[CameraService]])
+        table.insert(elements, {position = playerService:playerDrawingPosition(cameraService), elementType = "player"})
+        self.ordoringElements = elements
+        table.sort(self.ordoringElements, compareElement)
+    end
+
+    function this:render(
+            cameraService --[[CameraService]]
+    )
+        local player = self.playerService.player
+
+        local tileSize = self.map.tileSize
+        local camPos = cameraService.position
+        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
+        local minRow = math.floor(player.position.y / tileSize) - offset
+        local minCol = math.floor(player.position.x / tileSize) - offset
+
+        local maxRowPlayer = math.floor(player.position.y / tileSize) + offset
+        local maxColPlayer = math.floor(player.position.x / tileSize) + offset
+
+        local maxRowFromMap = #self.map.tilemap
+        local maxColFromMap = #self.map.tilemap[1]
+
+        local maxRow = maxRowPlayer
+        local maxCol = maxColPlayer
+
+        if maxRowPlayer > maxRowFromMap then
+            maxRow = maxRowFromMap
+        end
+
+        if maxColPlayer > maxColFromMap then
+            maxCol = maxColFromMap
+        end
+
+        for l = minRow, maxRow do
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
                     local tile = self.map.tilemap[l][c]
@@ -56,6 +126,20 @@ function MapService:new(
                         )
                     end
                 end
+            end
+        end
+
+        for elementIndex = 1, #self.ordoringElements do
+            local element = self.ordoringElements[elementIndex]
+            if element.elementType == "arbre" then
+                self.rendererService:render(
+                        self.imageFactory.fullTree,
+                        element.position
+                )
+            end
+
+            if element.elementType == "player" then
+                self.playerService:draw(cameraService)
             end
         end
 

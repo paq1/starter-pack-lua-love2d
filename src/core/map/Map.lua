@@ -22,7 +22,23 @@ function Map:new(size, tileSize)
         end
         return rows
     end
+    function loadForet(nbRow, nbCol)
+        local rows = {}
+        for r = 1, nbRow do
+            local cols = {}
+            for c = 1, nbCol do
+                if math.fmod(c, 3) == 0 and math.fmod(r, 2) == 0 then
+                    table.insert(cols, 1)
+                else
+                    table.insert(cols, 0)
+                end
+            end
+            table.insert(rows, cols)
+        end
+        return rows
+    end
     this.tilemap = loadMap(size.y, size.x)
+    this.arbres  = loadForet(size.y, size.x)
 
     function this:getCoordTile(position)
         local row = math.floor(position.y / self.tileSize)

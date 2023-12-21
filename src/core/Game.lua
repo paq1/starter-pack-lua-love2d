@@ -19,28 +19,30 @@ function Game:new(
         animationService = animationService,
         audioService = audioService
     }
-    this.mapService = MapService:new(
-            Map:new({ x = 20, y = 10 }, 32),
-            this.imageFactory,
-            this.rendererService,
-            this.audioService
-    )
     this.playerService = PlayerService:new(
             this.keyboardService,
             this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1),
             this.audioService
     )
+
+    this.mapService = MapService:new(
+            Map:new({ x = 30, y = 30 }, 32),
+            this.imageFactory,
+            this.rendererService,
+            this.audioService,
+            this.playerService
+    )
+
     this.cameraService = CameraService:new()
 
     function this:update(dt)
         self.audioService:update()
-        self.mapService:update(dt)
         self.playerService:update(dt, this.cameraService, this.mapService.map)
+        self.mapService:update(dt, this.cameraService)
     end
 
     function this:draw()
-        self.mapService:render(self.playerService.player, self.cameraService)
-        self.playerService:draw(self.cameraService)
+        self.mapService:render(self.cameraService)
     end
 
     return this

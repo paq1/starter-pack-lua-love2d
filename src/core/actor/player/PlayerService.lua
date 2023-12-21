@@ -88,15 +88,17 @@ function PlayerService:new(
         return seDeplace
     end
 
-    function this:draw(
-            cameraService --[[CameraService]]
-    )
-
-        local drawPos = {
+    function this:playerDrawingPosition(cameraService --[[CameraService]])
+        return {
             x = self.player.position.x - self.player.size.x / 2.0 - cameraService.position.x,
             y = self.player.position.y - self.player.size.y / 2.0 - cameraService.position.y
         }
+    end
 
+    function this:draw(
+            cameraService --[[CameraService]]
+    )
+        local drawPos = self:playerDrawingPosition(cameraService)
         self.anim:draw(self.sideIndex, 4, drawPos)
     end
 
