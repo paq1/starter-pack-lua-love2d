@@ -23,7 +23,7 @@ function Components:new()
     this.game = Game:new(
             this.keyboardService,
             this.rendererService,
-            this.imageFactory,  -- fixme pas de factory dans le game (services uniquement)
+            this.imageFactory,
             this.animationService,
             this.audioService,
             this.randomService

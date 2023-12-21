@@ -16,13 +16,11 @@ function MapService:new(
         ordoringElements = {}
     }
 
-    function this:minRowAndCol()
+    function this:minRowAndCol(offset)
         local playerPos = self.playerService.player.position
 
-        local tileSize = self.map.tileSize
-        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
-        local minRow = math.floor(playerPos.y / tileSize) - offset
-        local minCol = math.floor(playerPos.x / tileSize) - offset
+        local minRow = math.floor(playerPos.y / self.map.tileSize) - offset
+        local minCol = math.floor(playerPos.x / self.map.tileSize) - offset
 
         return {
             row = minRow,
@@ -30,12 +28,10 @@ function MapService:new(
         }
     end
 
-    function this:maxRowAndCol()
+    function this:maxRowAndCol(offset)
         local playerPos = self.playerService.player.position
-        local tileSize = self.map.tileSize
-        local offset = 30 -- fixme mettre un offset en fct de la taille de l'ecran
-        local maxRowPlayer = math.floor(playerPos.y / tileSize) + offset
-        local maxColPlayer = math.floor(playerPos.x / tileSize) + offset
+        local maxRowPlayer = math.floor(playerPos.y / self.map.tileSize) + offset
+        local maxColPlayer = math.floor(playerPos.x / self.map.tileSize) + offset
         local maxRowFromMap = #self.map.tilemap
         local maxColFromMap = #self.map.tilemap[1]
         local maxRow = maxRowPlayer
@@ -57,10 +53,11 @@ function MapService:new(
 
         local tileSize = self.map.tileSize
         local camPos = cameraService.position
+        local offset = 30
 
-        local minRowAndCol = self:minRowAndCol()
+        local minRowAndCol = self:minRowAndCol(offset)
         local minRow, minCol = minRowAndCol.row, minRowAndCol.col
-        local maxRowAndCol = self:maxRowAndCol()
+        local maxRowAndCol = self:maxRowAndCol(offset)
         local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
         for l = minRow, maxRow do
@@ -112,10 +109,11 @@ function MapService:new(
 
         local tileSize = self.map.tileSize
         local camPos = cameraService.position
+        local offset = 30
 
-        local minRowAndCol = self:minRowAndCol()
+        local minRowAndCol = self:minRowAndCol(offset)
         local minRow, minCol = minRowAndCol.row, minRowAndCol.col
-        local maxRowAndCol = self:maxRowAndCol()
+        local maxRowAndCol = self:maxRowAndCol(offset)
         local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
         for l = minRow, maxRow do
