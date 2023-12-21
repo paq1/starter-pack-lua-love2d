@@ -1,6 +1,8 @@
 # starter pack  lua love2D
 
 <p>seed pour les screen shoot : 1234</p>
+<br>
+
 ![alt text](./docs/screenShootStarter2.png)
 ![alt text](./docs/screenShootStarter3.png)
 
