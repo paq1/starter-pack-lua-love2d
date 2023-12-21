@@ -10,14 +10,16 @@ function Game:new(
         rendererService --[[RendererService]],
         imageFactory --[[ImageFactory]],
         animationService --[[AnimationService]],
-        audioService --[[AudioService]]
+        audioService --[[AudioService]],
+        randomService --[[RandomService]]
 )
     local this = {
         keyboardService = keyboardService,
         rendererService = rendererService,
         imageFactory = imageFactory,
         animationService = animationService,
-        audioService = audioService
+        audioService = audioService,
+        randomService = randomService
     }
     this.playerService = PlayerService:new(
             this.keyboardService,
@@ -26,7 +28,7 @@ function Game:new(
     )
 
     this.mapService = MapService:new(
-            Map:new({ x = 30, y = 30 }, 32),
+            Map:new({ x = 30, y = 30 }, 32, this.randomService),
             this.imageFactory,
             this.rendererService,
             this.audioService,

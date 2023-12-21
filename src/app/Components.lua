@@ -6,6 +6,7 @@ local ImageFactory = require("src/app/factories/ImageFactory")
 local AnimationService = require("src/app/animation/AnimationService")
 local AudioFactory = require("src/app/factories/AudioFactory")
 local AudioService = require("src/app/audio/AudioService")
+local RandomService = require("src/app/random/RandomService")
 
 local Game = require("src/core/Game")
 
@@ -15,7 +16,8 @@ function Components:new()
         rendererService = RendererService:new(),
         imageFactory = ImageFactory:new(),
         animationService = AnimationService:new(),
-        audioService = AudioService:new(AudioFactory:new())
+        audioService = AudioService:new(AudioFactory:new()),
+        randomService = RandomService:new(1234)
     }
 
     this.game = Game:new(
@@ -23,7 +25,8 @@ function Components:new()
             this.rendererService,
             this.imageFactory,  -- fixme pas de factory dans le game (services uniquement)
             this.animationService,
-            this.audioService
+            this.audioService,
+            this.randomService
     )
 
     return this

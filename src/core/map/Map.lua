@@ -1,6 +1,10 @@
 local Map = {}
 
-function Map:new(size, tileSize)
+function Map:new(
+        size,
+        tileSize,
+        randomService --[[RandomService]]
+)
 
     size = size or {
         x = 10,
@@ -27,7 +31,7 @@ function Map:new(size, tileSize)
         for r = 1, nbRow do
             local cols = {}
             for c = 1, nbCol do
-                if math.fmod(c, 3) == 0 and math.fmod(r, 2) == 0 then
+                if randomService:generateFromRange(1, 3) == 3 then
                     table.insert(cols, 1)
                 else
                     table.insert(cols, 0)
