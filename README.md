@@ -5,7 +5,7 @@
 ## wip
 
 <ul>
-    <li>...</li>
+    <li>refactoring and bugfix</li>
 </ul>
 
 ## todo
