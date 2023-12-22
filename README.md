@@ -17,13 +17,14 @@
 <ul>
     <li>scene (menu, jeu ... etc)</li>
     <li>collisions</li>
-    <li>arbre et algo de pathfinding</li>
+    <li>script de mise en prod du jeu (.exe du jeu)</li>
     <li>... etc</li>
 </ul>
 
 ## done
 
 <ul>
+    <li>destruction basique d'element sur la map</li>
     <li>service de sons</li>
     <li>gestion massive d'element sur la map</li>
     <li>affiche d'une grande map disponible</li>
