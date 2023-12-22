@@ -66,6 +66,9 @@ function MapService:new(
         local maxRowAndCol = self:maxRowAndCol(offset)
         local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
+        local heightSizeOfTree = 64.0
+        local offsetTreeY = heightSizeOfTree / 2.0
+
         for l = minRow, maxRow do
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
@@ -74,7 +77,10 @@ function MapService:new(
                         table.insert(
                                 elements,
                                 {
-                                    position = { x = arbre.position.x - camPos.x, y = arbre.position.y - camPos.y - 32.0 },
+                                    position = {
+                                        x = arbre.position.x - camPos.x,
+                                        y = arbre.position.y - camPos.y - offsetTreeY
+                                    },
                                     elementType = ElementType.ARBRE
                                 }
                         )
