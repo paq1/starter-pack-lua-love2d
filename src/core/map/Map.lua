@@ -1,11 +1,13 @@
 local Map = {}
 
-local ElementDestructible = require("src/core/map/element/ElementDestructible")
+local ElementDestructible = require("src/core/elements/ElementDestructible")
+local ElementType = require("src/core/elements/ElementType")
+local TileType = require("src/core/map/TileType")
 local Vecteur2D = require("src/models/math/Vecteur2D")
 
 function Map:new(
-        size,
-        tileSize,
+        size --[[Table : <x: Int, y: Int>]],
+        tileSize --[[Int]],
         randomService --[[RandomService]]
 )
 
@@ -23,7 +25,7 @@ function Map:new(
         for r = 1, nbRow do
             local cols = {}
             for c = 1, nbCol do
-                table.insert(cols, 1)
+                table.insert(cols, TileType.HERBE)
             end
             table.insert(rows, cols)
         end
@@ -39,7 +41,7 @@ function Map:new(
                             cols,
                             ElementDestructible:new(
                                     Vecteur2D:new(c * ptileSize, r * ptileSize),
-                                    "arbre",
+                                    ElementType.ARBRE,
                                     100,
                                     100
                             )

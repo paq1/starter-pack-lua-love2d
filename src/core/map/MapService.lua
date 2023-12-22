@@ -1,6 +1,7 @@
 local MapService = {}
 
 local ConfigMap = require("src/core/map/ConfigMap")
+local ElementType = require("src/core/elements/ElementType")
 
 function MapService:new(
         map --[[Map]],
@@ -69,12 +70,12 @@ function MapService:new(
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
                     local arbre = self.map.arbres[l][c]
-                    if arbre.elementType == "arbre" then
+                    if arbre.elementType == ElementType.ARBRE then
                         table.insert(
                                 elements,
                                 {
                                     position = { x = arbre.position.x - camPos.x, y = arbre.position.y - camPos.y - 32.0 },
-                                    elementType = "arbre"
+                                    elementType = ElementType.ARBRE
                                 }
                         )
                     end
@@ -89,11 +90,11 @@ function MapService:new(
 
         local offsetPlayerArbre = 32
 
-        if element1.elementType == "player" then
+        if element1.elementType == ElementType.PLAYER then
             return element1.position.y - offsetPlayerArbre < element2.position.y
         end
 
-        if element2.elementType == "player" then
+        if element2.elementType == ElementType.PLAYER then
             return element1.position.y < element2.position.y - offsetPlayerArbre
         end
 
@@ -104,7 +105,7 @@ function MapService:new(
         self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
 
         local elements = self:getElementsForDraw()
-        table.insert(elements, {position = playerService:playerDrawingPosition(), elementType = "player"})
+        table.insert(elements, {position = playerService:playerDrawingPosition(), elementType = ElementType.PLAYER})
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
     end
@@ -137,14 +138,14 @@ function MapService:new(
 
         for elementIndex = 1, #self.ordoringElements do
             local element = self.ordoringElements[elementIndex]
-            if element.elementType == "arbre" then
+            if element.elementType == ElementType.ARBRE then
                 self.rendererService:render(
                         self.imageFactory.fullTree,
                         element.position
                 )
             end
 
-            if element.elementType == "player" then
+            if element.elementType == ElementType.PLAYER then
                 self.playerService:draw(cameraService)
             end
         end
