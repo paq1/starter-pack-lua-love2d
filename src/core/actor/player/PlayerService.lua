@@ -1,28 +1,19 @@
 local PlayerService = {}
 
-local Player = require("src/core/actor/player/Player")
-
 function PlayerService:new(
         inputService --[[KeyboardService]],
         animation --[[Animation]],
         audioService --[[AudioService]],
-        cameraService --[[CameraService]]
+        cameraService --[[CameraService]],
+        player --[[Player]]
 )
-    local positionInitial = {
-        x = 300,
-        y = 150
-    }
-    local size = {
-        x = 32,
-        y = 32
-    }
     local this = {
         inputService = inputService,
         sideIndex = 0,
         anim = animation,
         audioService = audioService,
         cameraService = cameraService,
-        player = Player:new(positionInitial, size)
+        player = player
     }
 
     function this:update(

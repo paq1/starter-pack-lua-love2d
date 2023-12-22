@@ -1,10 +1,12 @@
 local Game = {}
 
+local ConfigGame = require("src/core/ConfigGame")
 local PlayerService = require("src/core/actor/player/PlayerService")
 local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
 local ConfigMap = require("src/core/map/ConfigMap")
+local Player = require("src/core/actor/player/Player")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -26,11 +28,20 @@ function Game:new(
     }
     this.cameraService = CameraService:new(this.windowService)
 
+    local tailleUneImageDeLAnimation = 16
+    local playerSize = {x = 32.0, y = 32.0}
+
     this.playerService = PlayerService:new(
             this.keyboardService,
-            this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1),
+            this.animationService:create(
+                    this.imageFactory.snakeSpritesheet,
+                    tailleUneImageDeLAnimation,
+                    tailleUneImageDeLAnimation,
+                    1
+            ),
             this.audioService,
-            this.cameraService
+            this.cameraService,
+            Player:new(ConfigGame.positionInitialePlayer, playerSize)
     )
 
 
