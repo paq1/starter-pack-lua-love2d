@@ -1,14 +1,18 @@
 local CameraService = {}
 
-function CameraService:new()
+function CameraService:new(
+        windowService --[[WindowService]]
+)
     local this = {
+        windowService = windowService,
         position = {x = 0, y = 0}
     }
 
     function this:updatePosition(newPosition)
+        local windowSize = self.windowService.getSize()
         self.position = {
-            x = newPosition.x - 400 - 16, -- fixme recup la window size
-            y = newPosition.y - 300 - 16, -- fixme recup la window size
+            x = newPosition.x - (windowSize.width / 2.0)  - 16,
+            y = newPosition.y - (windowSize.height / 2.0) - 16,
         }
     end
 

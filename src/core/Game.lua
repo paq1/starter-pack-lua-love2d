@@ -12,7 +12,8 @@ function Game:new(
         imageFactory --[[ImageFactory]],
         animationService --[[AnimationService]],
         audioService --[[AudioService]],
-        randomService --[[RandomService]]
+        randomService --[[RandomService]],
+        windowService --[[WindowService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -20,9 +21,10 @@ function Game:new(
         imageFactory = imageFactory,
         animationService = animationService,
         audioService = audioService,
-        randomService = randomService
+        randomService = randomService,
+        windowService = windowService
     }
-    this.cameraService = CameraService:new()
+    this.cameraService = CameraService:new(this.windowService)
 
     this.playerService = PlayerService:new(
             this.keyboardService,
@@ -41,7 +43,7 @@ function Game:new(
             this.cameraService
     )
 
-    function this:updatePlayerDestroyTrees(dt)
+    function this:updatePlayerDestroyTrees()
         if self.keyboardService:actionKeyIsDown() then
             local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
             self.mapService.map.arbres[coordPlayer.y][coordPlayer.x] = {}
@@ -52,7 +54,7 @@ function Game:new(
         self.audioService:update()
 
 
-        self:updatePlayerDestroyTrees(dt)
+        self:updatePlayerDestroyTrees()
 
         self.playerService:update(dt, this.mapService.map)
         self.mapService:update(dt)
