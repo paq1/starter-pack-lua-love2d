@@ -6,22 +6,7 @@
 ![alt text](./docs/screenShootStarter2.png)
 ![alt text](./docs/screenShootStarter3.png)
 
-## wip
-
-<ul>
-    <li>refactoring and bugfix</li>
-</ul>
-
-## todo
-
-<ul>
-    <li>scene (menu, jeu ... etc)</li>
-    <li>collisions</li>
-    <li>script de mise en prod du jeu (.exe du jeu)</li>
-    <li>... etc</li>
-</ul>
-
-## done
+## prise en charge par le starter pack
 
 <ul>
     <li>gestion de la souris</li>
@@ -36,4 +21,10 @@
     <li>config.lua OK</li>
     <li>run.bat pour run le projet</li>
     <li>...</li>
+</ul>
+
+## deployement
+
+<ul>
+    <li><a href="https://love2d.org/wiki/Game_Distribution">link</a></li>
 </ul>
