@@ -1,11 +1,14 @@
 local MapService = {}
 
+local ConfigMap = require("src/core/map/ConfigMap")
+
 function MapService:new(
         map --[[Map]],
         imageFactory --[[ImageFactory]],
         rendererService --[[RendererService]],
         audioService --[[AudioService]],
-        playerService --[[PlayerService]]
+        playerService --[[PlayerService]],
+        cameraService --[[CameraService]]
 )
     local this = {
         map = map,
@@ -13,10 +16,12 @@ function MapService:new(
         rendererService = rendererService,
         audioService = audioService,
         playerService = playerService,
+        cameraService = cameraService,
         ordoringElements = {}
     }
 
     function this:minRowAndCol(offset)
+        --local playerPos = self.playerService:playerDrawingPosition()
         local playerPos = self.playerService.player.position
 
         local minRow = math.floor(playerPos.y / self.map.tileSize) - offset
@@ -29,6 +34,7 @@ function MapService:new(
     end
 
     function this:maxRowAndCol(offset)
+        --local playerPos = self.playerService:playerDrawingPosition()
         local playerPos = self.playerService.player.position
         local maxRowPlayer = math.floor(playerPos.y / self.map.tileSize) + offset
         local maxColPlayer = math.floor(playerPos.x / self.map.tileSize) + offset
@@ -48,12 +54,11 @@ function MapService:new(
         }
     end
 
-    function this:getElementsForDraw(cameraService)
+    function this:getElementsForDraw()
         local elements = {}
 
-        local tileSize = self.map.tileSize
-        local camPos = cameraService.position
-        local offset = 30
+        local camPos = self.cameraService.position
+        local offset = ConfigMap.offset
 
         local minRowAndCol = self:minRowAndCol(offset)
         local minRow, minCol = minRowAndCol.row, minRowAndCol.col
@@ -64,11 +69,11 @@ function MapService:new(
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
                     local arbre = self.map.arbres[l][c]
-                    if arbre == 1 then
+                    if arbre.elementType == "arbre" then
                         table.insert(
                                 elements,
                                 {
-                                    position = { x = c * tileSize - camPos.x, y = l * tileSize - camPos.y - 32.0 },
+                                    position = { x = arbre.position.x - camPos.x, y = arbre.position.y - camPos.y - 32.0 },
                                     elementType = "arbre"
                                 }
                         )
@@ -82,34 +87,34 @@ function MapService:new(
 
     function compareElement(element1, element2)
 
+        local offsetPlayerArbre = 32
+
         if element1.elementType == "player" then
-            return element1.position.y - 32 < element2.position.y
+            return element1.position.y - offsetPlayerArbre < element2.position.y
         end
 
         if element2.elementType == "player" then
-            return element1.position.y < element2.position.y - 32
+            return element1.position.y < element2.position.y - offsetPlayerArbre
         end
 
         return element1.position.y < element2.position.y
     end
 
-    function this:update(dt, cameraService --[[CameraService]])
+    function this:update(dt)
         self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
 
-        local elements = self:getElementsForDraw(cameraService --[[CameraService]])
-        table.insert(elements, {position = playerService:playerDrawingPosition(cameraService), elementType = "player"})
+        local elements = self:getElementsForDraw()
+        table.insert(elements, {position = playerService:playerDrawingPosition(), elementType = "player"})
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
     end
 
-    function this:render(
-            cameraService --[[CameraService]]
-    )
+    function this:render()
         local player = self.playerService.player
 
         local tileSize = self.map.tileSize
-        local camPos = cameraService.position
-        local offset = 30
+        local camPos = self.cameraService.position
+        local offset = ConfigMap.offset
 
         local minRowAndCol = self:minRowAndCol(offset)
         local minRow, minCol = minRowAndCol.row, minRowAndCol.col

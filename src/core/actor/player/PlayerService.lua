@@ -5,7 +5,8 @@ local Player = require("src/core/actor/player/Player")
 function PlayerService:new(
         inputService --[[KeyboardService]],
         animation --[[Animation]],
-        audioService --[[AudioService]]
+        audioService --[[AudioService]],
+        cameraService --[[CameraService]]
 )
     local positionInitial = {
         x = 300,
@@ -20,12 +21,12 @@ function PlayerService:new(
         sideIndex = 0,
         anim = animation,
         audioService = audioService,
+        cameraService = cameraService,
         player = Player:new(positionInitial, size)
     }
 
     function this:update(
             dt,
-            cameraService --[[CameraService]],
             map --[[Map]]
     )
         self.anim:update(dt, false)
@@ -38,7 +39,7 @@ function PlayerService:new(
             self.audioService:setStepSongStatus(false)
         end
 
-        cameraService:updatePosition(self.player.position)
+        self.cameraService:updatePosition(self.player.position)
     end
 
     -- return true si le joueur a bougé sinon false
@@ -88,17 +89,15 @@ function PlayerService:new(
         return seDeplace
     end
 
-    function this:playerDrawingPosition(cameraService --[[CameraService]])
+    function this:playerDrawingPosition()
         return {
-            x = self.player.position.x - self.player.size.x / 2.0 - cameraService.position.x,
-            y = self.player.position.y - self.player.size.y / 2.0 - cameraService.position.y
+            x = self.player.position.x - self.player.size.x / 2.0 - self.cameraService.position.x,
+            y = self.player.position.y - self.player.size.y / 2.0 - self.cameraService.position.y
         }
     end
 
-    function this:draw(
-            cameraService --[[CameraService]]
-    )
-        local drawPos = self:playerDrawingPosition(cameraService)
+    function this:draw()
+        local drawPos = self:playerDrawingPosition(self.cameraService)
         self.anim:draw(self.sideIndex, 4, drawPos)
     end
 

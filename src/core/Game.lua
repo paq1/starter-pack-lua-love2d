@@ -4,6 +4,7 @@ local PlayerService = require("src/core/actor/player/PlayerService")
 local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
+local ConfigMap = require("src/core/map/ConfigMap")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -21,30 +22,33 @@ function Game:new(
         audioService = audioService,
         randomService = randomService
     }
+    this.cameraService = CameraService:new()
+
     this.playerService = PlayerService:new(
             this.keyboardService,
             this.animationService:create(this.imageFactory.snakeSpritesheet, 16, 16, 1),
-            this.audioService
+            this.audioService,
+            this.cameraService
     )
 
+
     this.mapService = MapService:new(
-            Map:new({ x = 3000, y = 3000 }, 32, this.randomService),
+            Map:new(ConfigMap.size, ConfigMap.tileSize, this.randomService),
             this.imageFactory,
             this.rendererService,
             this.audioService,
-            this.playerService
+            this.playerService,
+            this.cameraService
     )
-
-    this.cameraService = CameraService:new()
 
     function this:update(dt)
         self.audioService:update()
-        self.playerService:update(dt, this.cameraService, this.mapService.map)
-        self.mapService:update(dt, this.cameraService)
+        self.playerService:update(dt, this.mapService.map)
+        self.mapService:update(dt)
     end
 
     function this:draw()
-        self.mapService:render(self.cameraService)
+        self.mapService:render()
     end
 
     return this
