@@ -41,8 +41,19 @@ function Game:new(
             this.cameraService
     )
 
+    function this:updatePlayerDestroyTrees(dt)
+        if self.keyboardService:actionKeyIsDown() then
+            local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
+            self.mapService.map.arbres[coordPlayer.y][coordPlayer.x] = {}
+        end
+    end
+
     function this:update(dt)
         self.audioService:update()
+
+
+        self:updatePlayerDestroyTrees(dt)
+
         self.playerService:update(dt, this.mapService.map)
         self.mapService:update(dt)
     end

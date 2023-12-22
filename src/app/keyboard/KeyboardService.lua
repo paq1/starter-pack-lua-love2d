@@ -17,6 +17,10 @@ function KeyboardService:new()
         return love.keyboard.isDown("q")
     end
 
+    function this:actionKeyIsDown()
+        return love.keyboard.isDown("e")
+    end
+
     return this
 end
 
