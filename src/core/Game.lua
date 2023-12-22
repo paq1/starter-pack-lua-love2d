@@ -15,7 +15,8 @@ function Game:new(
         animationService --[[AnimationService]],
         audioService --[[AudioService]],
         randomService --[[RandomService]],
-        windowService --[[WindowService]]
+        windowService --[[WindowService]],
+        mouseService --[[MouseService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -24,9 +25,11 @@ function Game:new(
         animationService = animationService,
         audioService = audioService,
         randomService = randomService,
-        windowService = windowService
+        windowService = windowService,
+        mouseService = mouseService
     }
     this.cameraService = CameraService:new(this.windowService)
+    this.mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 16
     local playerSize = {x = 32.0, y = 32.0}
@@ -55,7 +58,7 @@ function Game:new(
     )
 
     function this:updatePlayerDestroyTrees()
-        if self.keyboardService:actionKeyIsDown() then
+        if self.mouseService:leftButtonIsPressed() then
             local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
             self.mapService.map.arbres[coordPlayer.y][coordPlayer.x] = {}
         end
@@ -73,6 +76,7 @@ function Game:new(
 
     function this:draw()
         self.mapService:render()
+        self.mouseService:draw()
     end
 
     return this

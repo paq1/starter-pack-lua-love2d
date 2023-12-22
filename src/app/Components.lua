@@ -1,6 +1,7 @@
 local Components = {}
 
 local KeyboardService = require("src/app/keyboard/KeyboardService")
+local MouseService = require("src/app/mouse/MouseService")
 local RendererService = require("src/app/renderer/RendererService")
 local ImageFactory = require("src/app/factories/ImageFactory")
 local AnimationService = require("src/app/animation/AnimationService")
@@ -21,6 +22,7 @@ function Components:new()
         randomService = RandomService:new(1234),
         windowService = WindowService:new()
     }
+    this.mouseService = MouseService:new(this.imageFactory)
 
     this.game = Game:new(
             this.keyboardService,
@@ -29,7 +31,8 @@ function Components:new()
             this.animationService,
             this.audioService,
             this.randomService,
-            this.windowService
+            this.windowService,
+            this.mouseService
     )
 
     return this

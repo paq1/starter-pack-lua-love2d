@@ -24,6 +24,7 @@
 ## done
 
 <ul>
+    <li>gestion de la souris</li>
     <li>destruction basique d'element sur la map</li>
     <li>service de sons</li>
     <li>gestion massive d'element sur la map</li>
