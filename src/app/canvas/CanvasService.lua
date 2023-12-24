@@ -8,8 +8,8 @@ function CanvasService:new(
     }
 
     function this:fromMapToTilemapCanvas(map --[[Map]])
-        local pixelMapWidth = #map.tilemap[1] * map.tileSize
-        local pixelMapHeight = #map.tilemap * map.tileSize
+        local pixelMapWidth = (#map.tilemap[1] + 1) * map.tileSize
+        local pixelMapHeight = (#map.tilemap + 1) * map.tileSize
 
         -- imageFactory.tileGrassImage
         local canvas = love.graphics.newCanvas(pixelMapWidth, pixelMapHeight)
