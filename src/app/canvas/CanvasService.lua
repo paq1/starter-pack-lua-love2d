@@ -13,7 +13,6 @@ function CanvasService:new(
 
         -- imageFactory.tileGrassImage
         local canvas = love.graphics.newCanvas(pixelMapWidth, pixelMapHeight)
-        local oldCanvas = love.graphics.getCanvas()
 
         love.graphics.setCanvas(canvas)
 
@@ -23,7 +22,7 @@ function CanvasService:new(
                 end
             end
 
-        love.graphics.setCanvas(oldCanvas)
+        love.graphics.setCanvas()
 
         return canvas
     end
