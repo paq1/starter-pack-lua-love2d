@@ -101,11 +101,11 @@ function MapService:new(
 
         local offsetPlayerArbre = 32
 
-        if element1.elementType == ElementType.PLAYER then
+        if element1.elementType == ElementType.PLAYER and element2.elementType == ElementType.ARBRE then
             return element1.position.y - offsetPlayerArbre < element2.position.y
         end
 
-        if element2.elementType == ElementType.PLAYER then
+        if element2.elementType == ElementType.PLAYER and element1.elementType == ElementType.ARBRE then
             return element1.position.y < element2.position.y - offsetPlayerArbre
         end
 
