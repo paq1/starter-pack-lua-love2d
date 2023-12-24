@@ -24,6 +24,10 @@ function KeyboardService:new()
         return love.keyboard.isDown("e")
     end
 
+    function this:ctrlIsDown()
+        return love.keyboard.isDown("lctrl")
+    end
+
     return this
 end
 

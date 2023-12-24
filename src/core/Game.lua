@@ -34,7 +34,7 @@ function Game:new(
     this.mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 16
-    local playerSize = {x = 32.0, y = 32.0}
+    local playerSize = { x = 32.0, y = 32.0 }
 
     this.playerService = PlayerService:new(
             this.keyboardService,

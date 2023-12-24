@@ -51,6 +51,9 @@ function PlayerService:new(
     -- return true si le joueur a bougé sinon false
     function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
+        if (self.inputService.ctrlIsDown()) then
+            vitesse = vitesse + 150.0
+        end
         local seDeplace = false
 
         if self.inputService:upIsDown() then
