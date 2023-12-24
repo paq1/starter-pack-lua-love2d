@@ -16,7 +16,8 @@ function Game:new(
         audioService --[[AudioService]],
         randomService --[[RandomService]],
         windowService --[[WindowService]],
-        mouseService --[[MouseService]]
+        mouseService --[[MouseService]],
+        canvasService --[[CanvasService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -26,7 +27,8 @@ function Game:new(
         audioService = audioService,
         randomService = randomService,
         windowService = windowService,
-        mouseService = mouseService
+        mouseService = mouseService,
+        canvasService = canvasService
     }
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
@@ -54,7 +56,8 @@ function Game:new(
             this.rendererService,
             this.audioService,
             this.playerService,
-            this.cameraService
+            this.cameraService,
+            this.canvasService
     )
 
     function this:updatePlayerDestroyTrees()

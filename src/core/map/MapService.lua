@@ -9,7 +9,8 @@ function MapService:new(
         rendererService --[[RendererService]],
         audioService --[[AudioService]],
         playerService --[[PlayerService]],
-        cameraService --[[CameraService]]
+        cameraService --[[CameraService]],
+        canvasService --[[CanvasService]]
 )
     local this = {
         map = map,
@@ -18,8 +19,12 @@ function MapService:new(
         audioService = audioService,
         playerService = playerService,
         cameraService = cameraService,
+        canvasService = canvasService,
         ordoringElements = {}
     }
+
+    this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
+
 
     function this:minRowAndCol(offset)
         --local playerPos = self.playerService:playerDrawingPosition()
@@ -118,29 +123,12 @@ function MapService:new(
 
     function this:render()
         local player = self.playerService.player
-
-        local tileSize = self.map.tileSize
         local camPos = self.cameraService.position
-        local offset = ConfigMap.offset
 
-        local minRowAndCol = self:minRowAndCol(offset)
-        local minRow, minCol = minRowAndCol.row, minRowAndCol.col
-        local maxRowAndCol = self:maxRowAndCol(offset)
-        local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
-
-        for l = minRow, maxRow do
-            for c = minCol, maxCol do
-                if l > 0 and c > 0 then
-                    local tile = self.map.tilemap[l][c]
-                    if tile == 1 then
-                        self.rendererService:render(
-                                self.imageFactory.tileGrassImage,
-                                { x = c * tileSize - camPos.x, y = l * tileSize - camPos.y }
-                        )
-                    end
-                end
-            end
-        end
+        self.rendererService:render(
+                self.canvasTilemap,
+                { x = -camPos.x, y = -camPos.y }
+        )
 
         for elementIndex = 1, #self.ordoringElements do
             local element = self.ordoringElements[elementIndex]
