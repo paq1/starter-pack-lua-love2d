@@ -72,7 +72,7 @@ function MapService:new(
         for l = minRow, maxRow do
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
-                    local arbre = self.map.arbres[l][c]
+                    local arbre = self.map.firstLayout[l][c]
                     if arbre.elementType == ElementType.ARBRE then
                         table.insert(
                                 elements,

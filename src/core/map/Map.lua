@@ -22,9 +22,9 @@ function Map:new(
 
     function loadMap(nbRow, nbCol)
         local rows = {}
-        for r = 1, nbRow do
+        for _ = 1, nbRow do
             local cols = {}
-            for c = 1, nbCol do
+            for _ = 1, nbCol do
                 table.insert(cols, TileType.HERBE)
             end
             table.insert(rows, cols)
@@ -58,7 +58,7 @@ function Map:new(
         return rows
     end
     this.tilemap = loadMap(size.y, size.x)
-    this.arbres  = loadForet(size.y, size.x, this.tileSize)
+    this.firstLayout = loadForet(size.y, size.x, this.tileSize)
 
     function this:getCoordTile(position)
         local row = math.floor(position.y / self.tileSize)
