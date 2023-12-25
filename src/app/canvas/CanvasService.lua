@@ -1,5 +1,7 @@
 local CanvasService = {}
 
+local ConfigGame = require("src/core/ConfigGame")
+
 function CanvasService:new(
         imageFactory --[[ImageFactory]]
 )

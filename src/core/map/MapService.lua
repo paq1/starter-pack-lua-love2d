@@ -1,6 +1,7 @@
 local MapService = {}
 
 local ConfigMap = require("src/core/map/ConfigMap")
+local ConfigGame = require("src/core/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
 
 function MapService:new(
@@ -71,7 +72,7 @@ function MapService:new(
         local maxRowAndCol = self:maxRowAndCol(offset)
         local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
-        local heightSizeOfTree = 64.0
+        local heightSizeOfTree = 64.0 * ConfigGame.scale
         local offsetTreeY = heightSizeOfTree / 2.0
 
         for l = minRow, maxRow do
@@ -83,8 +84,8 @@ function MapService:new(
                                 elements,
                                 {
                                     position = {
-                                        x = arbre.position.x - camPos.x,
-                                        y = arbre.position.y - camPos.y - offsetTreeY
+                                        x = (arbre.position.x * ConfigGame.scale) - camPos.x,
+                                        y = (arbre.position.y * ConfigGame.scale) - camPos.y - offsetTreeY
                                     },
                                     elementType = ElementType.ARBRE
                                 }
@@ -99,7 +100,7 @@ function MapService:new(
 
     function compareElement(element1, element2)
 
-        local offsetPlayerArbre = 32
+        local offsetPlayerArbre = 32 * ConfigGame.scale
 
         if element1.elementType == ElementType.PLAYER and element2.elementType == ElementType.ARBRE then
             return element1.position.y - offsetPlayerArbre < element2.position.y
@@ -127,7 +128,8 @@ function MapService:new(
 
         self.rendererService:render(
                 self.canvasTilemap,
-                { x = -camPos.x, y = -camPos.y }
+                { x = -camPos.x, y = -camPos.y },
+                ConfigGame.scale
         )
 
         for elementIndex = 1, #self.ordoringElements do
@@ -135,7 +137,8 @@ function MapService:new(
             if element.elementType == ElementType.ARBRE then
                 self.rendererService:render(
                         self.imageFactory.fullTree,
-                        element.position
+                        element.position,
+                        ConfigGame.scale
                 )
             end
 

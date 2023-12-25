@@ -1,6 +1,7 @@
 local app = require("src/app/App")
 
 function love.load()
+    love.graphics.setDefaultFilter( "nearest" )
     app.load()
 end
 

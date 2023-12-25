@@ -1,5 +1,7 @@
 local PlayerService = {}
 
+local ConfigGame = require("src/core/ConfigGame")
+
 function PlayerService:new(
         inputService --[[KeyboardService]],
         animation --[[Animation]],
@@ -30,7 +32,10 @@ function PlayerService:new(
             self.audioService:setStepSongStatus(false)
         end
 
-        self.cameraService:updatePosition(self.player.position)
+        self.cameraService:updatePosition({
+            x = self.player.position.x * ConfigGame.scale,
+            y = self.player.position.y * ConfigGame.scale
+        })
     end
 
     -- return true si le joueur a bougé sinon false
@@ -85,14 +90,14 @@ function PlayerService:new(
 
     function this:playerDrawingPosition()
         return {
-            x = self.player.position.x - self.player.size.x / 2.0 - self.cameraService.position.x,
-            y = self.player.position.y - self.player.size.y / 2.0 - self.cameraService.position.y
+            x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - self.cameraService.position.x,
+            y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - self.cameraService.position.y
         }
     end
 
     function this:draw()
         local drawPos = self:playerDrawingPosition(self.cameraService)
-        self.anim:draw(self.sideIndex, drawPos)
+        self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
     end
 
     return this
