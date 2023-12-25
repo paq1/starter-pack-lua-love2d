@@ -33,13 +33,13 @@ function Game:new(
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
 
-    local tailleUneImageDeLAnimation = 16
+    local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
 
     this.playerService = PlayerService:new(
             this.keyboardService,
-            this.animationService:create(
-                    this.imageFactory.snakeSpritesheet,
+            this.animationService:createHorizontalAnimation(
+                    this.imageFactory.personnageSpritesheet,
                     tailleUneImageDeLAnimation,
                     tailleUneImageDeLAnimation,
                     1

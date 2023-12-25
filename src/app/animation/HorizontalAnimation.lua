@@ -1,15 +1,15 @@
-local Animation = {}
+local HorizontalAnimation = {}
 
-function Animation:new(image, width, height, duration)
+function HorizontalAnimation:new(image, width, height, duration)
 
-    local nbAnimations = image:getHeight() / height
-    local nbDifferentSpritesType = image:getWidth() / width
+    local nbDifferentSpritesType = image:getHeight() / height
+    local nbAnimations = image:getWidth() / width
 
     local this = {
         spriteSheet = image,
-        quads = {},
         nbDifferentSpritesType = nbDifferentSpritesType,
         nbAnimations = nbAnimations,
+        quads = {},
         duration = duration or 1,
         currentTime = 0
     }
@@ -28,16 +28,18 @@ function Animation:new(image, width, height, duration)
 
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.duration then
-            self.currentTime = self.currentTime - self.duration
+            self.currentTime = 0.0
         end
     end
 
-    function this:draw(side_index, position)
+    function this:draw(side_index, position, scale)
+        scale = scale or 1
         local spriteNum = math.floor(self.currentTime / self.duration * self.nbAnimations) + 1
-        love.graphics.draw(self.spriteSheet, self.quads[spriteNum * self.nbAnimations - side_index], position.x, position.y, 0, 2)
+        local quadsIndex = spriteNum + (side_index * self.nbAnimations)
+        love.graphics.draw(self.spriteSheet, self.quads[quadsIndex], position.x, position.y, 0, scale)
     end
 
     return this
 end
 
-return Animation
+return HorizontalAnimation

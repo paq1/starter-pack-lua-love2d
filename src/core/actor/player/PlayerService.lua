@@ -57,7 +57,7 @@ function PlayerService:new(
         local seDeplace = false
 
         if self.inputService:upIsDown() then
-            self.sideIndex = 2
+            --self.sideIndex = 2
             local isMoving = self:movingPlayer({ x = 0, y = - vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
@@ -69,7 +69,7 @@ function PlayerService:new(
         end
 
         if self.inputService:downIsDown() then
-            self.sideIndex = 3
+            --self.sideIndex = 3
             local isMoving = self:movingPlayer({ x = 0, y = vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
@@ -92,7 +92,7 @@ function PlayerService:new(
 
     function this:draw()
         local drawPos = self:playerDrawingPosition(self.cameraService)
-        self.anim:draw(self.sideIndex, 4, drawPos)
+        self.anim:draw(self.sideIndex, drawPos)
     end
 
     return this

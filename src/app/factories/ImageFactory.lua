@@ -5,6 +5,7 @@ function ImageFactory:new()
         tileGrassImage = love.graphics.newImage("assets/sprites/map/grass.png"),
         fullTree = love.graphics.newImage("assets/sprites/map/completTree.png"),
         snakeSpritesheet = love.graphics.newImage("assets/sprites/actor/Snake.png"),
+        personnageSpritesheet = love.graphics.newImage("assets/sprites/actor/spitesheet_personnage.png"),
 
         cursorTarget = love.graphics.newImage("assets/sprites/hud/cursorTarget.png")
     }
