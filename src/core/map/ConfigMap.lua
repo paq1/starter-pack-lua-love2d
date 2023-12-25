@@ -1,6 +1,5 @@
 local ConfigMap = {}
 
-local ConfigGame = require("src/core/ConfigGame")
 
 ConfigMap.offset = 32
 ConfigMap.tileSize = 32

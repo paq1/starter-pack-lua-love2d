@@ -1,6 +1,5 @@
 local CameraService = {}
 
-local ConfigGame = require("src/core/ConfigGame")
 
 function CameraService:new(
         windowService --[[WindowService]]

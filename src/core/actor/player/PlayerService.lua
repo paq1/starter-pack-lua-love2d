@@ -1,6 +1,6 @@
 local PlayerService = {}
 
-local ConfigGame = require("src/core/ConfigGame")
+local ConfigGame = require("src/core/scenes/game/ConfigGame")
 
 function PlayerService:new(
         inputService --[[KeyboardService]],

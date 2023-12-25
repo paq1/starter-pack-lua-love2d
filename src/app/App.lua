@@ -7,11 +7,11 @@ function App.load()
 end
 
 function App.update(dt)
-    components.game:update(dt)
+    components.scenesService:update(dt)
 end
 
 function App.draw()
-    components.game:draw()
+    components.scenesService:draw()
 
     printFps()
 end

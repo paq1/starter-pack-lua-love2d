@@ -1,12 +1,13 @@
 local Game = {}
 
-local ConfigGame = require("src/core/ConfigGame")
+local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local PlayerService = require("src/core/actor/player/PlayerService")
 local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
 local ConfigMap = require("src/core/map/ConfigMap")
 local Player = require("src/core/actor/player/Player")
+local ScenesName = require("src/core/scenes/ScenesName")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -75,6 +76,8 @@ function Game:new(
 
         self.playerService:update(dt, this.mapService.map)
         self.mapService:update(dt)
+
+        return ScenesName.NONE
     end
 
     function this:draw()

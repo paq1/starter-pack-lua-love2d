@@ -20,6 +20,10 @@ function KeyboardService:new()
         return love.keyboard.isDown("q") or love.keyboard.isDown("left")
     end
 
+    function this:spaceIsDown()
+        return love.keyboard.isDown("space")
+    end
+
     function this:actionKeyIsDown()
         return love.keyboard.isDown("e")
     end

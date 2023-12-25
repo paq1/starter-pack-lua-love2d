@@ -1,7 +1,7 @@
 local MapService = {}
 
 local ConfigMap = require("src/core/map/ConfigMap")
-local ConfigGame = require("src/core/ConfigGame")
+local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
 
 function MapService:new(
