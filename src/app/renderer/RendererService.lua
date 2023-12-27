@@ -3,6 +3,9 @@ local RendererService = {}
 function RendererService:new()
     local this = {}
 
+    function this:setBlendMode()
+    end
+
     function this:render(image, at, scale)
         scale = scale or 1
         at = at or {x = 0, y = 0}

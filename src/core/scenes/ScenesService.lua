@@ -14,7 +14,8 @@ function ScenesService:new(
         randomService --[[RandomService]],
         windowService --[[WindowService]],
         mouseService --[[MouseService]],
-        canvasService --[[CanvasService]]
+        canvasService --[[CanvasService]],
+        postProcessLumiereService --[[PostProcessLumiereService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -25,7 +26,8 @@ function ScenesService:new(
         randomService = randomService,
         windowService = windowService,
         mouseService = mouseService,
-        canvasService = canvasService
+        canvasService = canvasService,
+        postProcessLumiereService = postProcessLumiereService
     }
 
     this.scenes = {
@@ -49,7 +51,8 @@ function ScenesService:new(
                 this.randomService,
                 this.windowService,
                 this.mouseService,
-                this.canvasService
+                this.canvasService,
+                this.postProcessLumiereService
         ),
         [ScenesName.OPTIONS] = Options:new()
     }

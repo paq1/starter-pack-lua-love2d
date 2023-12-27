@@ -59,6 +59,14 @@ function Map:new(
     end
     this.tilemap = loadMap(size.y, size.x)
     this.firstLayout = loadForet(size.y, size.x, this.tileSize)
+    this.lights = {}
+    table.insert(
+            this.lights,
+            {
+                x = 32 * 5,
+                y = 32 * 5
+            }
+    )
 
     function this:getCoordTile(position)
         local row = math.floor(position.y / self.tileSize)
