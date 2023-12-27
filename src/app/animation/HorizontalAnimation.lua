@@ -28,7 +28,7 @@ function HorizontalAnimation:new(image, width, height, duration)
 
         self.currentTime = self.currentTime + dt
         if self.currentTime >= self.duration then
-            self.currentTime = 0.0
+            self.currentTime = self.currentTime - self.duration
         end
     end
 
