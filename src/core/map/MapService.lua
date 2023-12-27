@@ -28,7 +28,6 @@ function MapService:new(
 
 
     function this:minRowAndCol(offset)
-        --local playerPos = self.playerService:playerDrawingPosition()
         local playerPos = self.playerService.player.position
 
         local minRow = math.floor(playerPos.y / self.map.tileSize) - offset
@@ -100,14 +99,15 @@ function MapService:new(
 
     function compareElement(element1, element2)
 
-        local offsetPlayerArbre = 32 * ConfigGame.scale
+        local heightArbre = 64
+        local offsetPlayerArbreY = (heightArbre / 2) * ConfigGame.scale
 
         if element1.elementType == ElementType.PLAYER and element2.elementType == ElementType.ARBRE then
-            return element1.position.y - offsetPlayerArbre < element2.position.y
+            return element1.position.y - offsetPlayerArbreY < element2.position.y
         end
 
         if element2.elementType == ElementType.PLAYER and element1.elementType == ElementType.ARBRE then
-            return element1.position.y < element2.position.y - offsetPlayerArbre
+            return element1.position.y < element2.position.y - offsetPlayerArbreY
         end
 
         return element1.position.y < element2.position.y
