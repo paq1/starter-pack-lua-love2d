@@ -80,6 +80,7 @@ function Menu:new(
     function this:draw()
         this:drawPlayer()
         this:printPressSpace()
+        self.mouseService:draw()
     end
 
     return this
