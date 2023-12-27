@@ -54,6 +54,12 @@ function Menu:new(
         return ScenesName.NONE
     end
 
+    function this:draw()
+        this:drawPlayer()
+        this:printPressSpace()
+        self.mouseService:draw()
+    end
+
     function this:drawPlayer()
         local windowCenterPosition = self.windowService:getCenter()
         local scale = 5
@@ -75,12 +81,6 @@ function Menu:new(
             y = windowSize.height - 100
         }
         rendererService:print("[" .. text .. "]", printPosition)
-    end
-
-    function this:draw()
-        this:drawPlayer()
-        this:printPressSpace()
-        self.mouseService:draw()
     end
 
     return this

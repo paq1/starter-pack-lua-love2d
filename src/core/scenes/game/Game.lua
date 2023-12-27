@@ -63,18 +63,12 @@ function Game:new(
             this.canvasService
     )
 
-    function this:updatePlayerDestroyTrees()
-        if self.mouseService:leftButtonIsPressed() then
-            local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
-            self.mapService.map.firstLayout[coordPlayer.y + 1][coordPlayer.x + 1] = {}
-        end
-    end
-
     function this:update(dt)
         self.audioService:update()
 
 
         self:updatePlayerDestroyTrees()
+        self:updatePlayerPutLight()
 
         self.playerService:update(dt, this.mapService.map)
         self.mapService:update(dt)
@@ -85,8 +79,34 @@ function Game:new(
     function this:draw()
         self.lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
         self.mapService:render()
-        self.mouseService:draw()
         self.lightService:resetShader()
+
+        self.mouseService:draw()
+        this:printNbLight({ x = 0, y = 64 })
+    end
+
+    function this:updatePlayerDestroyTrees()
+        if self.mouseService:leftButtonIsPressed() then
+            local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
+            self.mapService.map.firstLayout[coordPlayer.y + 1][coordPlayer.x + 1] = {}
+        end
+    end
+
+    function this:updatePlayerPutLight()
+        local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
+        local playerPosition = {
+            x = (coordPlayer.x * self.mapService.map.tileSize) + 16,
+            y = (coordPlayer.y * self.mapService.map.tileSize) + 16
+        }
+
+        if self.keyboardService:actionKeyIsDown() then
+            self.mapService.map:addLight(playerPosition)
+        end
+    end
+
+    function this:printNbLight(at)
+        at = at or { x = 0, y = 0 }
+        self.rendererService:print("lights : " .. #self.mapService.map.lights, at)
     end
 
     return this

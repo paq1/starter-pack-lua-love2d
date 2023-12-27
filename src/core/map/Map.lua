@@ -89,6 +89,25 @@ function Map:new(
         return {x = col, y = row}
     end
 
+    function this:lightExist(position)
+        for _, element in pairs(self.lights) do
+            if element.position.x == position.x and element.position.y == position.y then
+                return true
+            end
+        end
+        return false
+    end
+
+    function this:addLight(position, power)
+        power = power or 32
+        if not this:lightExist(position) and #self.lights < 512 then
+            table.insert(self.lights, {
+                position = position,
+                power = power
+            })
+        end
+    end
+
     function this:getTileAt(position)
         local coord = self:getCoordTile(position)
         if coord.x < 0 or coord.x > #self.tilemap[1] - 1 or coord.y < 0 or coord.y > #self.tilemap - 1 then
