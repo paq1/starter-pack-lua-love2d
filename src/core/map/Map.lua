@@ -61,12 +61,25 @@ function Map:new(
     this.firstLayout = loadForet(size.y, size.x, this.tileSize)
     this.lights = {
         {
-            x = 32 * 5,
-            y = 32 * 5
+            position = {
+                x = 32 * 5,
+                y = 32 * 5
+            },
+            power = 32
         },
         {
-            x = 32 * 2,
-            y = 32 * 25
+            position = {
+                x = 32 * 2,
+                y = 32 * 25
+            },
+            power = 12
+        },
+        {
+            position = {
+                x = 32 * 0,
+                y = 32 * 0
+            },
+            power = 12
         }
     }
 

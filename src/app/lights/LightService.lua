@@ -20,12 +20,12 @@ function LightService:new()
             local currentLight = lights[i]
 
             self.shader:send("lights[".. i - 1 .. "].position", {
-                currentLight.x - camPos.x,
-                currentLight.y - camPos.y,
+                currentLight.position.x - camPos.x,
+                currentLight.position.y - camPos.y,
             })
 
             self.shader:send("lights[".. i - 1 .. "].diffuse", {1.0, 1.0, 1.0})
-            self.shader:send("lights[".. i - 1 .. "].power", 30)
+            self.shader:send("lights[".. i - 1 .. "].power", currentLight.power)
         end
     end
 
