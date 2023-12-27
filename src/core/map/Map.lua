@@ -33,9 +33,9 @@ function Map:new(
     end
     function loadForet(nbRow, nbCol, ptileSize)
         local rows = {}
-        for r = 1, nbRow do
+        for r = 0, nbRow - 1 do
             local cols = {}
-            for c = 1, nbCol do
+            for c = 0, nbCol - 1 do
                 if randomService:generateFromRange(1, 3) == 3 then
                     table.insert(
                             cols,
@@ -68,10 +68,10 @@ function Map:new(
 
     function this:getTileAt(position)
         local coord = self:getCoordTile(position)
-        if coord.x < 1 or coord.x > #self.tilemap[1] or coord.y < 1 or coord.y > #self.tilemap then
+        if coord.x < 0 or coord.x > #self.tilemap[1] - 1 or coord.y < 0 or coord.y > #self.tilemap - 1 then
             return -1
         else
-            return self.tilemap[coord.y][coord.x]
+            return self.tilemap[coord.y + 1][coord.x + 1]
         end
     end
 

@@ -64,7 +64,7 @@ function Game:new(
     function this:updatePlayerDestroyTrees()
         if self.mouseService:leftButtonIsPressed() then
             local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
-            self.mapService.map.firstLayout[coordPlayer.y][coordPlayer.x] = {}
+            self.mapService.map.firstLayout[coordPlayer.y + 1][coordPlayer.x + 1] = {}
         end
     end
 
