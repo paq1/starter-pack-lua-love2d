@@ -15,7 +15,7 @@ function ScenesService:new(
         windowService --[[WindowService]],
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]],
-        postProcessLumiereService --[[PostProcessLumiereService]]
+        lightService --[[LightService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -27,7 +27,7 @@ function ScenesService:new(
         windowService = windowService,
         mouseService = mouseService,
         canvasService = canvasService,
-        postProcessLumiereService = postProcessLumiereService
+        lightService = lightService
     }
 
     this.scenes = {
@@ -52,7 +52,7 @@ function ScenesService:new(
                 this.windowService,
                 this.mouseService,
                 this.canvasService,
-                this.postProcessLumiereService
+                this.lightService
         ),
         [ScenesName.OPTIONS] = Options:new()
     }

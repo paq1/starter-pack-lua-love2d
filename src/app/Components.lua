@@ -10,7 +10,8 @@ local AudioService = require("src/app/audio/AudioService")
 local RandomService = require("src/app/random/RandomService")
 local WindowService = require("src/app/window/WindowService")
 local CanvasService = require("src/app/canvas/CanvasService")
-local PostProcessLumiereService = require("src/app/canvas/PostProcessLumiereService")
+local LightService = require("src/app/lights/LightService")
+
 
 local ScenesService = require("src/core/scenes/ScenesService")
 
@@ -26,7 +27,7 @@ function Components:new()
     }
     this.mouseService = MouseService:new(this.imageFactory)
     this.canvasService = CanvasService:new(this.imageFactory)
-    this.postProcessLumiereService = PostProcessLumiereService:new(this.windowService)
+    this.lightService = LightService:new()
 
     this.scenesService = ScenesService:new(
             this.keyboardService,
@@ -38,7 +39,7 @@ function Components:new()
             this.windowService,
             this.mouseService,
             this.canvasService,
-            this.postProcessLumiereService
+            this.lightService
     )
 
     return this

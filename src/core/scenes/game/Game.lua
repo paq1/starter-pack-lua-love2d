@@ -19,7 +19,7 @@ function Game:new(
         windowService --[[WindowService]],
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]],
-        postProcessLumiereService --[[PostProcessLumiereService]]
+        lightService --[[LightService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -31,7 +31,7 @@ function Game:new(
         windowService = windowService,
         mouseService = mouseService,
         canvasService = canvasService,
-        postProcessLumiereService = postProcessLumiereService
+        lightService = lightService
     }
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
@@ -63,8 +63,6 @@ function Game:new(
             this.canvasService
     )
 
-    this.postProcessLumiereCanvas = this.postProcessLumiereService:createLumiereCanvas(this.mapService.map)
-
     function this:updatePlayerDestroyTrees()
         if self.mouseService:leftButtonIsPressed() then
             local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
@@ -85,10 +83,10 @@ function Game:new(
     end
 
     function this:draw()
-        self.rendererService:setBlendMode()
+        self.lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
         self.mapService:render()
         self.mouseService:draw()
-        self.rendererService:render(self.postProcessLumiereCanvas, {x = 0, y = 0})
+        self.lightService:resetShader()
     end
 
     return this

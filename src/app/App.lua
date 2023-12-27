@@ -3,7 +3,7 @@ local App = {}
 local Components = require("src/app/Components")
 
 function App.load()
-    debugMode = true
+    debugMode = false
     components = Components:new()
 end
 
