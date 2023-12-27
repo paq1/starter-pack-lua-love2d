@@ -5,7 +5,7 @@ function LightShader:new()
 
     function this:newPhongShader()
         local shaderCode = [[
-        #define NUM_LIGHTS 248
+        #define NUM_LIGHTS 256
 
         struct Light {
           vec2 position;

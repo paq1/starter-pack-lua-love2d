@@ -1,6 +1,7 @@
 local LightService = {}
 
 local LightShader = require("src/app/lights/LightShader")
+local ConfigGame = require("src/core/scenes/game/ConfigGame")
 
 function LightService:new()
     local this = {}
@@ -20,8 +21,8 @@ function LightService:new()
             local currentLight = lights[i]
 
             self.shader:send("lights[".. i - 1 .. "].position", {
-                currentLight.position.x - camPos.x,
-                currentLight.position.y - camPos.y,
+                (currentLight.position.x * ConfigGame.scale) - camPos.x,
+                (currentLight.position.y * ConfigGame.scale) - camPos.y,
             })
 
             self.shader:send("lights[".. i - 1 .. "].diffuse", {1.0, 1.0, 1.0})

@@ -62,22 +62,22 @@ function Map:new(
     this.lights = {
         {
             position = {
-                x = 32 * 5,
-                y = 32 * 5
+                x = (32 * 5) + 16,
+                y = (32 * 5) + 16
             },
             power = 32
         },
         {
             position = {
-                x = 32 * 2,
-                y = 32 * 25
+                x = (32 * 2) + 16,
+                y = (32 * 25) + 16
             },
             power = 12
         },
         {
             position = {
-                x = 32 * 0,
-                y = 32 * 0
+                x = (32 * 0) + 16,
+                y = (32 * 0) + 16
             },
             power = 12
         }
