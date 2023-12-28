@@ -11,7 +11,7 @@ function LightService:new()
     function this:drawNightMod(lights, camPos)
         love.graphics.setShader(self.shader)
 
-        self.shader:send("screen" ,{
+        self.shader:send("screen", {
             love.graphics.getWidth(),
             love.graphics.getHeight()
         })
