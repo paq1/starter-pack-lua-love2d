@@ -32,6 +32,10 @@ function KeyboardService:new()
         return love.keyboard.isDown("lctrl")
     end
 
+    function this:f1IsDown()
+        return love.keyboard.isDown("f1")
+    end
+
     return this
 end
 

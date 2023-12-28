@@ -6,6 +6,7 @@ local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
 local ConfigMap = require("src/core/map/ConfigMap")
+local ConfigApp = require("src/core/ConfigApp")
 local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
 
@@ -82,8 +83,10 @@ function Game:new(
         self.lightService:resetShader()
 
         self.mouseService:draw()
-        self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
-        self:printNbLight({ x = 0, y = 32 })
+        if ConfigApp.debug then
+            self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
+            self:printNbLight({ x = 0, y = 64 })
+        end
     end
 
     function this:updatePlayerDestroyTrees()
