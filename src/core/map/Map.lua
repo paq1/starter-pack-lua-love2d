@@ -17,22 +17,39 @@ function Map:new(
     }
 
     local this = {
+        size = size,
         tileSize = tileSize,
-        defaultLightPower = 60
+        defaultLightPower = 60,
+        randomService = randomService
     }
 
-    function loadMap(nbRow, nbCol)
+    function this:loadMap()
+        local nbRow, nbCol = self.size.y, self.size.x
+
         local rows = {}
-        for _ = 1, nbRow do
+        for row = 1, nbRow do
             local cols = {}
-            for _ = 1, nbCol do
-                table.insert(cols, TileType.HERBE)
+            for col = 1, nbCol do
+                -- fixme (architecture) mettre love.math.noise dans l'impl d'un service dans le "module" app
+                local noise = love.math.noise(col + self.randomService:random(), row + self.randomService:random())
+                noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
+                if noise > 0.2 then
+                    table.insert(cols, TileType.HERBE)
+                else
+                    table.insert(cols, TileType.EMPTY)
+                end
+
             end
             table.insert(rows, cols)
         end
         return rows
     end
-    function loadForest(nbRow, nbCol, ptileSize)
+
+
+    function this:loadForest()
+
+        local nbRow, nbCol = self.size.y, self.size.x
+
         local rows = {}
 
         for r = 0, nbRow - 1 do
@@ -40,7 +57,7 @@ function Map:new(
             for c = 0, nbCol - 1 do
                 local randomTypeArbre = randomService:generateFromRange(1, 3)
 
-                if randomService:generateFromRange(1, 3) == 3 then
+                if randomService:generateFromRange(1, 3) == 3 and self.tilemap[r + 1][c + 1] == TileType.HERBE then
                     local arbreType = TreeCategory.BASIQUE
 
                     if randomTypeArbre == 2 then
@@ -50,7 +67,7 @@ function Map:new(
                     table.insert(
                             cols,
                             {
-                                position = Vecteur2D:new(c * ptileSize, r * ptileSize),
+                                position = Vecteur2D:new(c * self.tileSize, r * self.tileSize),
                                 elementType = ElementType.ARBRE,
                                 vie = 100,
                                 vieMax = 100,
@@ -68,8 +85,9 @@ function Map:new(
         end
         return rows
     end
-    this.tilemap = loadMap(size.y, size.x)
-    this.firstLayout = loadForest(size.y, size.x, this.tileSize)
+    this.tilemap = this:loadMap()
+
+    this.firstLayout = this:loadForest()
     this.lights = {
         {
             position = {

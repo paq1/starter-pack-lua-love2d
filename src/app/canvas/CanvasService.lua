@@ -1,5 +1,6 @@
 local CanvasService = {}
 
+local TileType = require("src/core/map/TileType")
 
 function CanvasService:new(
         imageFactory --[[ImageFactory]]
@@ -18,7 +19,9 @@ function CanvasService:new(
 
             for r = 0, #map.tilemap - 1 do
                 for c = 0, #map.tilemap[r + 1] - 1 do
-                    love.graphics.draw(self.imageFactory.tileForet, c * map.tileSize, r * map.tileSize)
+                    if map.tilemap[r + 1][c + 1] == TileType.HERBE then
+                        love.graphics.draw(self.imageFactory.tileForet, c * map.tileSize, r * map.tileSize)
+                    end
                 end
             end
 

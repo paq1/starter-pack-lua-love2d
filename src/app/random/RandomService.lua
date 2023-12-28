@@ -9,6 +9,10 @@ function RandomService:new(seed --[[Int]])
         return math.random(min, max)
     end
 
+    function this:random()
+        return math.random()
+    end
+
     return this
 end
 
