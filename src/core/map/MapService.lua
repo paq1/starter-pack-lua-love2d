@@ -11,7 +11,8 @@ function MapService:new(
         audioService --[[AudioService]],
         playerService --[[PlayerService]],
         cameraService --[[CameraService]],
-        canvasService --[[CanvasService]]
+        canvasService --[[CanvasService]],
+        animationFactory --[[AnimationFactory]]
 )
     local this = {
         map = map,
@@ -21,6 +22,7 @@ function MapService:new(
         playerService = playerService,
         cameraService = cameraService,
         canvasService = canvasService,
+        animationFactory = animationFactory,
         ordoringElements = {}
     }
 
@@ -40,7 +42,6 @@ function MapService:new(
     end
 
     function this:maxRowAndCol(offset)
-        --local playerPos = self.playerService:playerDrawingPosition()
         local playerPos = self.playerService.player.position
         local maxRowPlayer = math.floor(playerPos.y / self.map.tileSize) + offset
         local maxColPlayer = math.floor(playerPos.x / self.map.tileSize) + offset
@@ -63,7 +64,6 @@ function MapService:new(
     function this:getElementsForDraw()
         local elements = {}
 
-        local camPos = self.cameraService.position
         local offset = ConfigMap.offset
 
         local minRowAndCol = self:minRowAndCol(offset)
@@ -71,53 +71,52 @@ function MapService:new(
         local maxRowAndCol = self:maxRowAndCol(offset)
         local maxRow, maxCol = maxRowAndCol.row, maxRowAndCol.col
 
-        local heightSizeOfTree = 64.0 * ConfigGame.scale
-        local offsetTreeY = heightSizeOfTree / 2.0
-
         for l = minRow, maxRow do
             for c = minCol, maxCol do
                 if l > 0 and c > 0 then
                     local arbre = self.map.firstLayout[l][c]
                     if arbre.elementType == ElementType.ARBRE then
-                        table.insert(
-                                elements,
-                                {
-                                    position = {
-                                        x = (arbre.position.x * ConfigGame.scale) - camPos.x,
-                                        y = (arbre.position.y * ConfigGame.scale) - camPos.y - offsetTreeY
-                                    },
-                                    elementType = ElementType.ARBRE
-                                }
-                        )
+                        table.insert(elements, {
+                            position = {
+                                x = arbre.position.x,
+                                y = arbre.position.y
+                            },
+                            elementType = ElementType.ARBRE
+                        })
                     end
                 end
             end
         end
 
+        for _, torche in pairs(self.map.lights) do
+            table.insert(elements, {
+                position = {
+                    x = torche.position.x,
+                    y = torche.position.y
+                },
+                elementType = ElementType.TORCHE
+            })
+        end
+
+
+        local playerPosition = {
+            x = self.playerService.player.position.x - self.playerService.player.size.x / 2.0,
+            y = self.playerService.player.position.y - self.playerService.player.size.y / 2.0
+        }
+        table.insert(elements, {position = playerPosition, elementType = ElementType.PLAYER})
+
         return elements
     end
 
     function compareElement(element1, element2)
-
-        local heightArbre = 64
-        local offsetPlayerArbreY = (heightArbre / 2) * ConfigGame.scale
-
-        if element1.elementType == ElementType.PLAYER and element2.elementType == ElementType.ARBRE then
-            return element1.position.y - offsetPlayerArbreY < element2.position.y
-        end
-
-        if element2.elementType == ElementType.PLAYER and element1.elementType == ElementType.ARBRE then
-            return element1.position.y < element2.position.y - offsetPlayerArbreY
-        end
-
         return element1.position.y < element2.position.y
     end
 
     function this:update(dt)
         self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+        self.animationFactory.torcheAnimation:update(dt)
 
         local elements = self:getElementsForDraw()
-        table.insert(elements, {position = playerService:playerDrawingPosition(), elementType = ElementType.PLAYER})
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
     end
@@ -130,19 +129,39 @@ function MapService:new(
                 { x = -camPos.x, y = -camPos.y },
                 ConfigGame.scale
         )
+        self:renderElements(camPos)
+    end
+
+    function this:renderElements(camPos)
+        local heightSizeOfTree = 64.0
+        local offsetTreeY = heightSizeOfTree / 2.0
+        local offsetTorcheForCenter = (16 * ConfigGame.scale)
 
         for elementIndex = 1, #self.ordoringElements do
             local element = self.ordoringElements[elementIndex]
+
+            local drawingPosition = {
+                x = (element.position.x * ConfigGame.scale) - camPos.x,
+                y = (element.position.y * ConfigGame.scale) - camPos.y
+            }
             if element.elementType == ElementType.ARBRE then
                 self.rendererService:render(
                         self.imageFactory.fullTree,
-                        element.position,
+                        { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale) },
                         ConfigGame.scale
                 )
             end
 
             if element.elementType == ElementType.PLAYER then
                 self.playerService:draw(cameraService)
+            end
+
+            if element.elementType == ElementType.TORCHE then
+                local torchePosition = {
+                    x = drawingPosition.x - offsetTorcheForCenter,
+                    y = drawingPosition.y - offsetTorcheForCenter
+                }
+                self.animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
             end
         end
     end

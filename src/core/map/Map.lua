@@ -102,7 +102,7 @@ function Map:new(
         power = power or 32
         if not this:lightExist(position) and #self.lights < 512 then
             table.insert(self.lights, {
-                position = position,
+                position = { x = position.x, y = position.y },
                 power = power
             })
         end

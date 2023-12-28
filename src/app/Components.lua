@@ -11,6 +11,7 @@ local RandomService = require("src/app/random/RandomService")
 local WindowService = require("src/app/window/WindowService")
 local CanvasService = require("src/app/canvas/CanvasService")
 local LightService = require("src/app/lights/LightService")
+local AnimationFactory = require("src/app/factories/AnimationFactory")
 
 
 local ScenesService = require("src/core/scenes/ScenesService")
@@ -28,6 +29,7 @@ function Components:new()
     this.mouseService = MouseService:new(this.imageFactory)
     this.canvasService = CanvasService:new(this.imageFactory)
     this.lightService = LightService:new()
+    this.animationFactory = AnimationFactory:new(this.animationService, this.imageFactory)
 
     this.scenesService = ScenesService:new(
             this.keyboardService,
@@ -39,7 +41,8 @@ function Components:new()
             this.windowService,
             this.mouseService,
             this.canvasService,
-            this.lightService
+            this.lightService,
+            this.animationFactory
     )
 
     return this

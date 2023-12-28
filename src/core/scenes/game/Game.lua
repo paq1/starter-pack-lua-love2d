@@ -20,7 +20,8 @@ function Game:new(
         windowService --[[WindowService]],
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]],
-        lightService --[[LightService]]
+        lightService --[[LightService]],
+        animationFactory --[[AnimationFactory]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -32,7 +33,8 @@ function Game:new(
         windowService = windowService,
         mouseService = mouseService,
         canvasService = canvasService,
-        lightService = lightService
+        lightService = lightService,
+        animationFactory = animationFactory
     }
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
@@ -61,7 +63,8 @@ function Game:new(
             this.audioService,
             this.playerService,
             this.cameraService,
-            this.canvasService
+            this.canvasService,
+            this.animationFactory
     )
 
     function this:update(dt)
