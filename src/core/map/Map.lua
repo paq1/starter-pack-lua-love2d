@@ -72,22 +72,22 @@ function Map:new(
     this.lights = {
         {
             position = {
-                x = (32 * 5) + 16,
-                y = (32 * 5) + 16
+                x = (this.tileSize * 5) + this.tileSize / 2,
+                y = (this.tileSize * 5) + this.tileSize / 2
             },
             power = 100
         },
         {
             position = {
-                x = (32 * 2) + 16,
-                y = (32 * 25) + 16
+                x = (this.tileSize * 2) + this.tileSize / 2,
+                y = (this.tileSize * 25) + this.tileSize / 2
             },
             power = 100
         },
         {
             position = {
-                x = (32 * 0) + 16,
-                y = (32 * 0) + 16
+                x = (this.tileSize * 0) + this.tileSize / 2,
+                y = (this.tileSize * 0) + this.tileSize / 2
             },
             power = 100
         }
@@ -110,7 +110,7 @@ function Map:new(
 
     function this:addLight(position, power)
         power = power or 100
-        if not this:lightExist(position) and #self.lights < 512 then
+        if not this:lightExist(position) and #self.lights < 256 then
             table.insert(self.lights, {
                 position = { x = position.x, y = position.y },
                 power = power
