@@ -1,6 +1,7 @@
 local PlayerService = {}
 
 local ConfigGame = require("src/core/scenes/game/ConfigGame")
+local TileType = require("src/core/map/TileType")
 
 function PlayerService:new(
         inputService --[[KeyboardService]],
@@ -45,9 +46,9 @@ function PlayerService:new(
             y = self.player.position.y + vecteurDeplacement.y
         }
         local tile = map:getTileAt(nouvellePosition)
-        if tile ~= -1 then
+        if tile == TileType.HERBE then
             self.player.position = nouvellePosition
-           return true
+            return true
         end
 
         return false

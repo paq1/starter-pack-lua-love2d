@@ -12,7 +12,7 @@ local WindowService = require("src/app/window/WindowService")
 local CanvasService = require("src/app/canvas/CanvasService")
 local LightService = require("src/app/lights/LightService")
 local AnimationFactory = require("src/app/factories/AnimationFactory")
-
+local PerlinNoiseService = require("src/app/utils/noise/PerlinNoiseService")
 
 local ScenesService = require("src/core/scenes/ScenesService")
 
@@ -30,6 +30,7 @@ function Components:new()
     this.canvasService = CanvasService:new(this.imageFactory)
     this.lightService = LightService:new()
     this.animationFactory = AnimationFactory:new(this.animationService, this.imageFactory)
+    this.perlinNoiseService = PerlinNoiseService:new()
 
     this.scenesService = ScenesService:new(
             this.keyboardService,
@@ -42,7 +43,8 @@ function Components:new()
             this.mouseService,
             this.canvasService,
             this.lightService,
-            this.animationFactory
+            this.animationFactory,
+            this.perlinNoiseService
     )
 
     return this

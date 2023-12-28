@@ -16,7 +16,8 @@ function ScenesService:new(
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]],
         lightService --[[LightService]],
-        animationFactory --[[AnimationFactory]]
+        animationFactory --[[AnimationFactory]],
+        perlinNoiseService --[[PerlinNoiseService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -29,7 +30,8 @@ function ScenesService:new(
         mouseService = mouseService,
         canvasService = canvasService,
         lightService = lightService,
-        animationFactory = animationFactory
+        animationFactory = animationFactory,
+        perlinNoiseService = perlinNoiseService
     }
 
     this.scenes = {
@@ -55,7 +57,8 @@ function ScenesService:new(
                 this.mouseService,
                 this.canvasService,
                 this.lightService,
-                this.animationFactory
+                this.animationFactory,
+                this.perlinNoiseService
         ),
         [ScenesName.OPTIONS] = Options:new()
     }

@@ -8,7 +8,8 @@ local TreeCategory = require("src/core/map/TreeCategory")
 function Map:new(
         size --[[Table : <x: Int, y: Int>]],
         tileSize --[[Int]],
-        randomService --[[RandomService]]
+        randomService --[[RandomService]],
+        perlinNoiseService --[[PerlinNoiseService]]
 )
 
     size = size or {
@@ -20,7 +21,8 @@ function Map:new(
         size = size,
         tileSize = tileSize,
         defaultLightPower = 60,
-        randomService = randomService
+        randomService = randomService,
+        perlinNoiseService = perlinNoiseService
     }
 
     function this:loadMap()
@@ -30,9 +32,8 @@ function Map:new(
         for row = 1, nbRow do
             local cols = {}
             for col = 1, nbCol do
-                -- fixme (architecture) mettre love.math.noise dans l'impl d'un service dans le "module" app
-                local noise = love.math.noise(col + self.randomService:random(), row + self.randomService:random())
-                noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
+                local noise = self.perlinNoiseService:noise(col + self.randomService:random(), row + self.randomService:random())
+                --noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
                 if noise > 0.2 then
                     table.insert(cols, TileType.HERBE)
                 else

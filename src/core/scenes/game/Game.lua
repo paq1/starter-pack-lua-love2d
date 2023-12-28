@@ -21,7 +21,8 @@ function Game:new(
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]],
         lightService --[[LightService]],
-        animationFactory --[[AnimationFactory]]
+        animationFactory --[[AnimationFactory]],
+        perlinNoiseService --[[PerlinNoiseService]]
 )
     local this = {
         keyboardService = keyboardService,
@@ -34,7 +35,8 @@ function Game:new(
         mouseService = mouseService,
         canvasService = canvasService,
         lightService = lightService,
-        animationFactory = animationFactory
+        animationFactory = animationFactory,
+        perlinNoiseService = perlinNoiseService
     }
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
@@ -57,7 +59,12 @@ function Game:new(
 
 
     this.mapService = MapService:new(
-            Map:new(ConfigMap.size, ConfigMap.tileSize, this.randomService),
+            Map:new(
+                    ConfigMap.size,
+                    ConfigMap.tileSize,
+                    this.randomService,
+                    this.perlinNoiseService
+            ),
             this.imageFactory,
             this.rendererService,
             this.audioService,
