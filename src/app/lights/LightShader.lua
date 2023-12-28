@@ -23,6 +23,8 @@ function LightShader:new()
         const float linear = 1.0;
         const float quadratic = 0.032;
 
+        vec3 fromLightToDiffuse(Light light, vec2 norm_screen);
+
         vec4 effect( vec4 color, Image image, vec2 texture_coords, vec2 screen_coords ){
             vec4 pixel = Texel(image, texture_coords);
 
@@ -30,18 +32,21 @@ function LightShader:new()
             vec3 diffuse = vec3(0);
 
             for (int i = 0; i < num_lights; i++) {
-                Light light = lights[i];
-                vec2 norm_pos = light.position / screen;
-
-                float distance = length(norm_pos - norm_screen) * light.power;
-                float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
-
-                diffuse += light.diffuse * attenuation;
+                diffuse += fromLightToDiffuse(lights[i], norm_screen);
             }
 
             diffuse = clamp(diffuse, 0.0, 1.0);
 
             return pixel * vec4(diffuse, 1.0);
+        }
+
+        vec3 fromLightToDiffuse(Light light, vec2 norm_screen) {
+            vec2 norm_pos = light.position / screen;
+
+            float distance = length(norm_pos - norm_screen) * light.power;
+            float attenuation = 1.0 / (constant + linear * distance + quadratic * (distance * distance));
+
+            return light.diffuse * attenuation;
         }
 
         ]]
