@@ -123,7 +123,6 @@ function MapService:new(
     end
 
     function this:render()
-        local player = self.playerService.player
         local camPos = self.cameraService.position
 
         self.rendererService:render(
@@ -146,8 +145,6 @@ function MapService:new(
                 self.playerService:draw(cameraService)
             end
         end
-
-        self:printCurrentCoordPlayerOnMap({ x = 0, y = 32 }, player)
     end
 
     function this:printCurrentCoordPlayerOnMap(at, player)

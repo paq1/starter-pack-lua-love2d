@@ -82,7 +82,8 @@ function Game:new(
         self.lightService:resetShader()
 
         self.mouseService:draw()
-        this:printNbLight({ x = 0, y = 64 })
+        self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
+        self:printNbLight({ x = 0, y = 32 })
     end
 
     function this:updatePlayerDestroyTrees()
