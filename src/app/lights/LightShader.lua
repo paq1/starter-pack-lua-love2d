@@ -4,6 +4,8 @@ function LightShader:new()
     local this = {}
 
     function this:newPhongShader()
+
+        -- le language utilisé est du GLSL (très similaire a du C)
         local shaderCode = [[
         #define NUM_LIGHTS 256
 
@@ -13,9 +15,9 @@ function LightShader:new()
           float power;
         };
 
-        extern Light lights[NUM_LIGHTS];
-        extern int num_lights;
-        extern vec2 screen;
+        uniform Light lights[NUM_LIGHTS];
+        uniform int num_lights;
+        uniform vec2 screen;
 
         const float constant = 1.0;
         const float linear = 1.0;
