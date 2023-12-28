@@ -1,6 +1,5 @@
 local Map = {}
 
-local ElementDestructible = require("src/core/elements/ElementDestructible")
 local ElementType = require("src/core/elements/ElementType")
 local TileType = require("src/core/map/TileType")
 local Vecteur2D = require("src/models/math/Vecteur2D")
@@ -33,18 +32,28 @@ function Map:new(
     end
     function loadForet(nbRow, nbCol, ptileSize)
         local rows = {}
+
         for r = 0, nbRow - 1 do
             local cols = {}
             for c = 0, nbCol - 1 do
+                local randomTypeArbre = randomService:generateFromRange(1, 3)
+
                 if randomService:generateFromRange(1, 3) == 3 then
+                    local arbreType = "classique"
+
+                    if randomTypeArbre == 2 then
+                        arbreType = "sapin"
+                    end
+
                     table.insert(
                             cols,
-                            ElementDestructible:new(
-                                    Vecteur2D:new(c * ptileSize, r * ptileSize),
-                                    ElementType.ARBRE,
-                                    100,
-                                    100
-                            )
+                            {
+                                position = Vecteur2D:new(c * ptileSize, r * ptileSize),
+                                elementType = ElementType.ARBRE,
+                                vie = 100,
+                                vieMax = 100,
+                                arbreType = arbreType
+                            }
                     )
                 else
                     table.insert(

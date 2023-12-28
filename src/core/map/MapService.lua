@@ -81,7 +81,8 @@ function MapService:new(
                                 x = arbre.position.x,
                                 y = arbre.position.y
                             },
-                            elementType = ElementType.ARBRE
+                            elementType = ElementType.ARBRE,
+                            arbreType = arbre.arbreType
                         })
                     end
                 end
@@ -145,8 +146,16 @@ function MapService:new(
                 y = (element.position.y * ConfigGame.scale) - camPos.y
             }
             if element.elementType == ElementType.ARBRE then
+
+                local arbreType = element.arbreType
+                local imageArbre = self.imageFactory.fullTree
+
+                if arbreType == "sapin" then
+                    imageArbre = self.imageFactory.sapin
+                end
+
                 self.rendererService:render(
-                        self.imageFactory.fullTree,
+                        imageArbre,
                         { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale) },
                         ConfigGame.scale
                 )

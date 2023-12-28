@@ -18,7 +18,7 @@ function CanvasService:new(
 
             for r = 0, #map.tilemap - 1 do
                 for c = 0, #map.tilemap[r + 1] - 1 do
-                    love.graphics.draw(self.imageFactory.tileGrassImage, c * map.tileSize, r * map.tileSize)
+                    love.graphics.draw(self.imageFactory.tileForet, c * map.tileSize, r * map.tileSize)
                 end
             end
 
