@@ -3,6 +3,7 @@ local Map = {}
 local ElementType = require("src/core/elements/ElementType")
 local TileType = require("src/core/map/TileType")
 local Vecteur2D = require("src/models/math/Vecteur2D")
+local TreeCategory = require("src/core/map/TreeCategory")
 
 function Map:new(
         size --[[Table : <x: Int, y: Int>]],
@@ -30,7 +31,7 @@ function Map:new(
         end
         return rows
     end
-    function loadForet(nbRow, nbCol, ptileSize)
+    function loadForest(nbRow, nbCol, ptileSize)
         local rows = {}
 
         for r = 0, nbRow - 1 do
@@ -39,10 +40,10 @@ function Map:new(
                 local randomTypeArbre = randomService:generateFromRange(1, 3)
 
                 if randomService:generateFromRange(1, 3) == 3 then
-                    local arbreType = "classique"
+                    local arbreType = TreeCategory.BASIQUE
 
                     if randomTypeArbre == 2 then
-                        arbreType = "sapin"
+                        arbreType = TreeCategory.SAPIN
                     end
 
                     table.insert(
@@ -67,7 +68,7 @@ function Map:new(
         return rows
     end
     this.tilemap = loadMap(size.y, size.x)
-    this.firstLayout = loadForet(size.y, size.x, this.tileSize)
+    this.firstLayout = loadForest(size.y, size.x, this.tileSize)
     this.lights = {
         {
             position = {

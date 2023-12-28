@@ -3,6 +3,7 @@ local MapService = {}
 local ConfigMap = require("src/core/map/ConfigMap")
 local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
+local TreeCategory = require("src/core/map/TreeCategory")
 
 function MapService:new(
         map --[[Map]],
@@ -27,6 +28,26 @@ function MapService:new(
     }
 
     this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
+
+    function this:update(dt)
+        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+        self.animationFactory.torcheAnimation:update(dt)
+
+        local elements = self:getElementsForDraw()
+        self.ordoringElements = elements
+        table.sort(self.ordoringElements, compareElement)
+    end
+
+    function this:render()
+        local camPos = self.cameraService.position
+
+        self.rendererService:render(
+                self.canvasTilemap,
+                { x = -camPos.x, y = -camPos.y },
+                ConfigGame.scale
+        )
+        self:renderElements(camPos)
+    end
 
 
     function this:minRowAndCol(offset)
@@ -113,26 +134,6 @@ function MapService:new(
         return element1.position.y < element2.position.y
     end
 
-    function this:update(dt)
-        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
-        self.animationFactory.torcheAnimation:update(dt)
-
-        local elements = self:getElementsForDraw()
-        self.ordoringElements = elements
-        table.sort(self.ordoringElements, compareElement)
-    end
-
-    function this:render()
-        local camPos = self.cameraService.position
-
-        self.rendererService:render(
-                self.canvasTilemap,
-                { x = -camPos.x, y = -camPos.y },
-                ConfigGame.scale
-        )
-        self:renderElements(camPos)
-    end
-
     function this:renderElements(camPos)
         local heightSizeOfTree = 64.0
         local offsetTreeY = heightSizeOfTree / 2.0
@@ -150,7 +151,7 @@ function MapService:new(
                 local arbreType = element.arbreType
                 local imageArbre = self.imageFactory.fullTree
 
-                if arbreType == "sapin" then
+                if arbreType == TreeCategory.SAPIN then
                     imageArbre = self.imageFactory.sapin
                 end
 
