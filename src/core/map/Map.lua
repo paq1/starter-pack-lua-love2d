@@ -17,7 +17,8 @@ function Map:new(
     }
 
     local this = {
-        tileSize = tileSize
+        tileSize = tileSize,
+        defaultLightPower = 60
     }
 
     function loadMap(nbRow, nbCol)
@@ -75,21 +76,21 @@ function Map:new(
                 x = (this.tileSize * 5) + this.tileSize / 2,
                 y = (this.tileSize * 5) + this.tileSize / 2
             },
-            power = 100
+            power = this.defaultLightPower
         },
         {
             position = {
                 x = (this.tileSize * 2) + this.tileSize / 2,
                 y = (this.tileSize * 25) + this.tileSize / 2
             },
-            power = 100
+            power = this.defaultLightPower
         },
         {
             position = {
                 x = (this.tileSize * 0) + this.tileSize / 2,
                 y = (this.tileSize * 0) + this.tileSize / 2
             },
-            power = 100
+            power = this.defaultLightPower
         }
     }
 
@@ -109,7 +110,7 @@ function Map:new(
     end
 
     function this:addLight(position, power)
-        power = power or 100
+        power = power or this.defaultLightPower
         if not this:lightExist(position) and #self.lights < 256 then
             table.insert(self.lights, {
                 position = { x = position.x, y = position.y },
