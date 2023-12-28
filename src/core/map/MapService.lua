@@ -101,8 +101,8 @@ function MapService:new(
 
 
         local playerPosition = {
-            x = self.playerService.player.position.x - self.playerService.player.size.x / 2.0,
-            y = self.playerService.player.position.y - self.playerService.player.size.y / 2.0
+            x = self.playerService.player.position.x,
+            y = self.playerService.player.position.y
         }
         table.insert(elements, {position = playerPosition, elementType = ElementType.PLAYER})
 
