@@ -74,21 +74,21 @@ function Map:new(
                 x = (32 * 5) + 16,
                 y = (32 * 5) + 16
             },
-            power = 32
+            power = 100
         },
         {
             position = {
                 x = (32 * 2) + 16,
                 y = (32 * 25) + 16
             },
-            power = 12
+            power = 100
         },
         {
             position = {
                 x = (32 * 0) + 16,
                 y = (32 * 0) + 16
             },
-            power = 12
+            power = 100
         }
     }
 
@@ -108,7 +108,7 @@ function Map:new(
     end
 
     function this:addLight(position, power)
-        power = power or 32
+        power = power or 100
         if not this:lightExist(position) and #self.lights < 512 then
             table.insert(self.lights, {
                 position = { x = position.x, y = position.y },
