@@ -1,6 +1,8 @@
 local Menu = {}
 
 local ScenesName = require("src/core/scenes/ScenesName")
+local DynamicTextAppearDisappear = require("src/core/text/DynamicTextAppearDisappear")
+local DynamicTextAppear = require("src/core/text/DynamicTextAppear")
 
 function Menu:new(
         keyboardService --[[KeyboardService]],
@@ -30,10 +32,7 @@ function Menu:new(
             imageFactory.personnageSpritesheet, this.imagePlayerSize, this.imagePlayerSize, 2
     )
 
-    this.finalText = "Press space to start"
-    this.text = ""
-    this.textTimer = 0.0
-    this.textDuration = 0.1
+    this.dynText = DynamicTextAppearDisappear:new("Press space to start", 0.1)
 
     function this:update(dt)
 
@@ -43,13 +42,7 @@ function Menu:new(
             return ScenesName.GAME
         end
 
-        if #this.finalText ~= #this.text then
-            this.textTimer = this.textTimer + dt
-            if this.textTimer > this.textDuration then
-                this.textTimer = this.textTimer - this.textDuration
-                this.text = this.text .. string.sub(this.finalText, #this.text + 1, #this.text + 1)
-            end
-        end
+        this.dynText:update(dt)
 
         return ScenesName.NONE
     end
@@ -75,7 +68,7 @@ function Menu:new(
         local windowCenterPosition = self.windowService:getCenter()
         local windowSize = self.windowService:getSize()
         --local text = "press space to start"
-        local text = self.text
+        local text = self.dynText.currentText
         local printPosition = {
             x = windowCenterPosition.x - (#text * 3.3),
             y = windowSize.height - 100
