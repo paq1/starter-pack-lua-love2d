@@ -178,7 +178,11 @@ function MapService:new(
     function this:printCurrentCoordPlayerOnMap(at, player)
         at = at or { x = 0, y = 0 }
         local pos = player.position
-        local coord = self.map:getCoordTile(pos)
+        local footPosition = {
+            x = pos.x,
+            y = pos.y + 16
+        }
+        local coord = self.map:getCoordTile(footPosition)
 
         self.rendererService:print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", { x = at.x, y = at.y })
     end
