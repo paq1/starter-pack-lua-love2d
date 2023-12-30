@@ -34,16 +34,116 @@ function Map:new(
             local cols = {}
             for col = 1, nbCol do
                 local noise = self.perlinNoiseService:noise(col + self.randomService:random(), row + self.randomService:random())
-                noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
+                --noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
                 if noise > 0.2 then
-                    table.insert(cols, TileType.HERBE)
+                    table.insert(cols, {
+                        tileType = TileType.HERBE,
+                        side = 5
+                    })
                 else
-                    table.insert(cols, TileType.EMPTY)
+                    table.insert(cols, {
+                        tileType = TileType.EMPTY
+                    })
                 end
 
             end
             table.insert(rows, cols)
         end
+
+        for row = 1, #rows do
+            local cols = {}
+            for col = 1, #rows[row] do
+
+                local tile = rows[row][col]
+
+                if tile.tileType == TileType.HERBE then
+                    if row == 1 and col == 1 then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 1
+                        }
+                    elseif row == 1 and col == #rows[col] then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 3
+                        }
+                    elseif row == 1 then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 2
+                        }
+                    elseif row == #rows and col == 1 then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 11
+                        }
+                    elseif row == #rows and col == #rows[col] then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 13
+                        }
+                    elseif col == 1 then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 6
+                        }
+                    elseif col == #rows[row] then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 8
+                        }
+                    elseif row == #rows then
+                        rows[row][col] = {
+                            tileType = TileType.HERBE,
+                            side = 12
+                        }
+
+                    elseif rows[row][col].tileType == TileType.HERBE then
+
+                        local tileUpIsEmpty = rows[row - 1][col].tileType == TileType.EMPTY
+                        local tileRightIsEmpty = rows[row][col + 1].tileType == TileType.EMPTY
+                        local tileDownIsEmpty = rows[row + 1][col].tileType == TileType.EMPTY
+                        local tileLeftIsEmpty = rows[row][col - 1].tileType == TileType.EMPTY
+
+                        if tileUpIsEmpty and not tileRightIsEmpty and not tileLeftIsEmpty and not tileDownIsEmpty then
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 2
+                            }
+                        elseif tileUpIsEmpty and tileDownIsEmpty and not tileRightIsEmpty and not tileLeftIsEmpty then
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 10
+                            }
+                        elseif tileRightIsEmpty then
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 8
+                            }
+                        elseif tileDownIsEmpty then
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 12
+                            }
+                        elseif tileLeftIsEmpty then
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 6
+                            }
+                        else
+                            rows[row][col] = {
+                                tileType = TileType.HERBE,
+                                side = 7
+                            }
+                        end
+
+                    end
+                end
+
+            end
+        end
+
+
         return rows
     end
 
@@ -59,7 +159,7 @@ function Map:new(
             for c = 0, nbCol - 1 do
                 local randomTypeArbre = randomService:generateFromRange(1, 3)
 
-                if randomService:generateFromRange(1, 3) == 3 and self.tilemap[r + 1][c + 1] == TileType.HERBE then
+                if randomService:generateFromRange(1, 3) == 3 and self.tilemap[r + 1][c + 1].tileType == TileType.HERBE then
                     local arbreType = TreeCategory.BASIQUE
 
                     if randomTypeArbre == 2 then
@@ -142,7 +242,7 @@ function Map:new(
     function this:getTileAt(position)
         local coord = self:getCoordTile(position)
         if coord.x < 0 or coord.x > #self.tilemap[1] - 1 or coord.y < 0 or coord.y > #self.tilemap - 1 then
-            return -1
+            return { tileType = TileType.EMPTY }
         else
             return self.tilemap[coord.y + 1][coord.x + 1]
         end

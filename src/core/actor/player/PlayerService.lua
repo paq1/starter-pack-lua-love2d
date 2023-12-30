@@ -46,7 +46,7 @@ function PlayerService:new(
             y = self.player.position.y + vecteurDeplacement.y
         }
         local tile = map:getTileAt(nouvellePosition)
-        if tile == TileType.HERBE then
+        if tile.tileType == TileType.HERBE then
             self.player.position = nouvellePosition
             return true
         end

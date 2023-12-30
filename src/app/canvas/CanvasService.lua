@@ -19,8 +19,14 @@ function CanvasService:new(
 
             for r = 0, #map.tilemap - 1 do
                 for c = 0, #map.tilemap[r + 1] - 1 do
-                    if map.tilemap[r + 1][c + 1] == TileType.HERBE then
-                        love.graphics.draw(self.imageFactory.tileForet, c * map.tileSize, r * map.tileSize)
+                    local tile = map.tilemap[r + 1][c + 1]
+                    if tile.tileType == TileType.HERBE then
+                        love.graphics.draw(
+                                self.imageFactory.tileForestSpriteSheetImage,
+                                self.imageFactory.tileForestSpriteSheet.quads[tile.side],
+                                c * map.tileSize,
+                                r * map.tileSize
+                        )
                     end
                 end
             end
