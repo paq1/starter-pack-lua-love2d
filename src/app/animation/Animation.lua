@@ -34,7 +34,11 @@ function Animation:new(image, width, height, duration)
 
     function this:draw(side_index, position)
         local spriteNum = math.floor(self.currentTime / self.duration * self.nbAnimations) + 1
-        love.graphics.draw(self.spriteSheet, self.quads[spriteNum * self.nbAnimations - side_index], position.x, position.y, 0, 2)
+        local spriteIndex = spriteNum * self.nbAnimations - side_index
+        if spriteIndex > #self.quads then
+            spriteIndex = #self.quads
+        end
+        love.graphics.draw(self.spriteSheet, self.quads[spriteIndex], position.x, position.y, 0, 2)
     end
 
     return this

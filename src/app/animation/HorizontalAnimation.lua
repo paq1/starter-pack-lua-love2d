@@ -36,6 +36,9 @@ function HorizontalAnimation:new(image, width, height, duration)
         scale = scale or 1
         local spriteNum = math.floor(self.currentTime / self.duration * self.nbAnimations) + 1
         local quadsIndex = spriteNum + (side_index * self.nbAnimations)
+        if quadsIndex > #self.quads then
+            quadsIndex = #self.quads
+        end
         love.graphics.draw(self.spriteSheet, self.quads[quadsIndex], position.x, position.y, 0, scale)
     end
 
