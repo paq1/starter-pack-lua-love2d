@@ -137,11 +137,10 @@ function MapService:new(
     function this:renderElements(camPos)
         local heightSizeOfTree = 64.0
         local offsetTreeY = heightSizeOfTree / 2.0
-        local offsetTorcheForCenter = (16 * ConfigGame.scale)
+        local offsetBasiqueElement = (16 * ConfigGame.scale)
 
-        for elementIndex = 1, #self.ordoringElements do
-            local element = self.ordoringElements[elementIndex]
 
+        for _, element in pairs(self.ordoringElements) do
             local drawingPosition = {
                 x = (element.position.x * ConfigGame.scale) - camPos.x,
                 y = (element.position.y * ConfigGame.scale) - camPos.y
@@ -157,7 +156,7 @@ function MapService:new(
 
                 self.rendererService:render(
                         imageArbre,
-                        { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale) },
+                        { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale + offsetBasiqueElement) },
                         ConfigGame.scale
                 )
             end
@@ -168,8 +167,8 @@ function MapService:new(
 
             if element.elementType == ElementType.TORCHE then
                 local torchePosition = {
-                    x = drawingPosition.x - offsetTorcheForCenter,
-                    y = drawingPosition.y - offsetTorcheForCenter
+                    x = drawingPosition.x - offsetBasiqueElement,
+                    y = drawingPosition.y - offsetBasiqueElement
                 }
                 self.animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
             end
