@@ -4,6 +4,7 @@ local ElementType = require("src/core/elements/ElementType")
 local TileType = require("src/core/map/TileType")
 local Vecteur2D = require("src/models/math/Vecteur2D")
 local TreeCategory = require("src/core/map/TreeCategory")
+local ConfigMap = require("src/core/map/ConfigMap")
 
 function Map:new(
         size --[[Table : <x: Int, y: Int>]],
@@ -20,7 +21,7 @@ function Map:new(
     local this = {
         size = size,
         tileSize = tileSize,
-        defaultLightPower = 60,
+        defaultLightPower = ConfigMap.torchBasePower,
         randomService = randomService,
         perlinNoiseService = perlinNoiseService
     }
