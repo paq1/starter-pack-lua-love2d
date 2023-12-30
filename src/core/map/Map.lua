@@ -34,7 +34,7 @@ function Map:new(
             local cols = {}
             for col = 1, nbCol do
                 local noise = self.perlinNoiseService:noise(col + self.randomService:random(), row + self.randomService:random())
-                --noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
+                noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
                 if noise > 0.2 then
                     table.insert(cols, {
                         tileType = TileType.HERBE,
