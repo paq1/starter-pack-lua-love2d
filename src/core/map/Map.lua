@@ -1,5 +1,7 @@
 local Map = {}
 
+
+local TilemapGenerator = require("src/core/map/TilemapGenerator")
 local ElementType = require("src/core/elements/ElementType")
 local TileType = require("src/core/map/TileType")
 local Vecteur2D = require("src/models/math/Vecteur2D")
@@ -27,124 +29,7 @@ function Map:new(
     }
 
     function this:loadMap()
-        local nbRow, nbCol = self.size.y, self.size.x
-
-        local rows = {}
-        for row = 1, nbRow do
-            local cols = {}
-            for col = 1, nbCol do
-                local noise = self.perlinNoiseService:noise(col + self.randomService:random(), row + self.randomService:random())
-                noise = 2 -- todo commenter pour tester les collision avec les tiles Empty
-                if noise > 0.2 then
-                    table.insert(cols, {
-                        tileType = TileType.HERBE,
-                        side = 5
-                    })
-                else
-                    table.insert(cols, {
-                        tileType = TileType.EMPTY
-                    })
-                end
-
-            end
-            table.insert(rows, cols)
-        end
-
-        for row = 1, #rows do
-            local cols = {}
-            for col = 1, #rows[row] do
-
-                local tile = rows[row][col]
-
-                if tile.tileType == TileType.HERBE then
-                    if row == 1 and col == 1 then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 1
-                        }
-                    elseif row == 1 and col == #rows[col] then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 3
-                        }
-                    elseif row == 1 then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 2
-                        }
-                    elseif row == #rows and col == 1 then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 11
-                        }
-                    elseif row == #rows and col == #rows[col] then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 13
-                        }
-                    elseif col == 1 then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 6
-                        }
-                    elseif col == #rows[row] then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 8
-                        }
-                    elseif row == #rows then
-                        rows[row][col] = {
-                            tileType = TileType.HERBE,
-                            side = 12
-                        }
-
-                    elseif rows[row][col].tileType == TileType.HERBE then
-
-                        local tileUpIsEmpty = rows[row - 1][col].tileType == TileType.EMPTY
-                        local tileRightIsEmpty = rows[row][col + 1].tileType == TileType.EMPTY
-                        local tileDownIsEmpty = rows[row + 1][col].tileType == TileType.EMPTY
-                        local tileLeftIsEmpty = rows[row][col - 1].tileType == TileType.EMPTY
-
-                        if tileUpIsEmpty and not tileRightIsEmpty and not tileLeftIsEmpty and not tileDownIsEmpty then
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 2
-                            }
-                        elseif tileUpIsEmpty and tileDownIsEmpty and not tileRightIsEmpty and not tileLeftIsEmpty then
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 10
-                            }
-                        elseif tileRightIsEmpty then
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 8
-                            }
-                        elseif tileDownIsEmpty then
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 12
-                            }
-                        elseif tileLeftIsEmpty then
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 6
-                            }
-                        else
-                            rows[row][col] = {
-                                tileType = TileType.HERBE,
-                                side = 7
-                            }
-                        end
-
-                    end
-                end
-
-            end
-        end
-
-
-        return rows
+        return TilemapGenerator.generateTilemap(self.size, self.randomService, self.perlinNoiseService)
     end
 
 
