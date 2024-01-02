@@ -11,6 +11,8 @@ function ImageFactory:new()
         fullTree = love.graphics.newImage("assets/sprites/map/arbres/arbre_classique.png"),
         sapin = love.graphics.newImage("assets/sprites/map/arbres/sapin.png"),
         cursorTarget = love.graphics.newImage("assets/sprites/hud/cursorTarget.png"),
+        itemInventaire = love.graphics.newImage("assets/sprites/hud/itemInventairePart.png"),
+        itemAxe = love.graphics.newImage("assets/sprites/hud/items/axe.png"),
 
         -- sprite sheet image
         snakeSpritesheet = love.graphics.newImage("assets/sprites/actor/Snake.png"),

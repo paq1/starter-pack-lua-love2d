@@ -5,6 +5,9 @@ local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
 local TreeCategory = require("src/core/map/TreeCategory")
 
+local Axe = require("src/core/items/tools/Axe")
+local AxeEffect = require("src/core/items/tools/AxeEffect")
+
 function MapService:new(
         map --[[Map]],
         imageFactory --[[ImageFactory]],
@@ -29,6 +32,21 @@ function MapService:new(
 
     this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
 
+    this.items = {
+        Axe:new(
+                AxeEffect:new(this, this.playerService),
+                this.imageFactory,
+                this.rendererService,
+                 {x = 32, y = 32 * 5}
+        ),
+        Axe:new(
+                AxeEffect:new(this, this.playerService),
+                this.imageFactory,
+                this.rendererService,
+                {x = 32, y = 32 * 7}
+        )
+    }
+
     function this:update(dt)
         self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
         self.animationFactory.torcheAnimation:update(dt)
@@ -36,6 +54,20 @@ function MapService:new(
         local elements = self:getElementsForDraw()
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
+
+        -- joueur peut ramasser item
+        local playerPosition = self.playerService.player.position
+        for index, item in pairs(self.items) do
+            local itemPosition = item.position
+            if itemPosition.x > playerPosition.x and itemPosition.x < playerPosition.x + 32 and itemPosition.y > playerPosition.y and itemPosition.y < playerPosition.y + 32 then
+                --self.items[index].position = {} -- disparait de la map
+                local successAdd = playerService.player.inventaire:addItem(self.items[index])
+                if successAdd then
+                    self.items[index].position = {} -- disparait de la map
+                    table.remove(self.items, index)
+                end
+            end
+        end
     end
 
     function this:render()
@@ -47,6 +79,12 @@ function MapService:new(
                 ConfigGame.scale
         )
         self:renderElements(camPos)
+
+        -- todo les afficher dans l'ordre
+        -- affichage des items sur la map
+        for _,item in pairs(self.items) do
+            item:draw(camPos, ConfigGame.scale)
+        end
     end
 
 

@@ -41,6 +41,8 @@ function Game:new(
     this.cameraService = CameraService:new(this.windowService)
     this.mouseService:setVisibility(false)
 
+    this.kp1Used = false
+
     local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
 
@@ -77,12 +79,20 @@ function Game:new(
     function this:update(dt)
         self.audioService:update()
 
-
-        self:updatePlayerDestroyTrees()
+        self:updatePlayerUseItem(dt)
         self:updatePlayerPutLight()
 
-        self.playerService:update(dt, this.mapService.map)
+        self.playerService:update(dt, self.mapService.map)
         self.mapService:update(dt)
+
+        if self.keyboardService:kp1IsDown() and not self.kp1Used then
+            self.kp1Used = true
+            self.playerService.player.inventaire:equipeItem(1)
+        end
+
+        if not self.keyboardService:kp1IsDown() then
+            self.kp1Used = false
+        end
 
         return ScenesName.NONE
     end
@@ -92,6 +102,8 @@ function Game:new(
         self.mapService:render()
         self.lightService:resetShader()
 
+        self:drawInventaire()
+
         self.mouseService:draw()
         if ConfigApp.debug then
             self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
@@ -99,14 +111,63 @@ function Game:new(
         end
     end
 
-    function this:updatePlayerDestroyTrees()
-        if self.mouseService:leftButtonIsPressed() then
-            local footPlayer = {
-                x = self.playerService.player.position.x,
-                y = self.playerService.player.position.y + 16
+    function this:drawInventaire()
+        local inventaire = self.playerService.player.inventaire
+        local items = inventaire.items
+        local nbSlots = #items
+        local windowSize = self.windowService:getSize()
+        local OneSlotWidth = 32
+        local totalPixelWidthInventaire = nbSlots * OneSlotWidth * ConfigGame.scale
+        for index = 1, nbSlots do
+
+            local item = items[index]
+
+            local position = {
+                x = (index - 1) * 32 * ConfigGame.scale + windowSize.width / 2 - totalPixelWidthInventaire / 2,
+                y = windowSize.height - 64 * ConfigGame.scale
             }
-            local coordPlayer = self.mapService.map:getCoordTile(footPlayer)
-            self.mapService.map.firstLayout[coordPlayer.y + 1][coordPlayer.x + 1] = {}
+
+            self.rendererService:render(
+                    self.imageFactory.itemInventaire,
+                    position,
+                    ConfigGame.scale
+            )
+
+            if item.itemType ~= "empty" then
+                item:drawInInventaire(position, ConfigGame.scale)
+            end
+        end
+
+
+        -- item equiper joueur
+        local item = inventaire.slotEquipe
+        local offsetSlotEquipe = 32 * ConfigGame.scale
+
+        local position = {
+            x = (nbSlots) * 32 * ConfigGame.scale + windowSize.width / 2 - totalPixelWidthInventaire / 2 + offsetSlotEquipe,
+            y = windowSize.height - 64 * ConfigGame.scale
+        }
+
+        self.rendererService:render(
+                self.imageFactory.itemInventaire,
+                position,
+                ConfigGame.scale
+        )
+
+        if item.itemType ~= "empty" then
+            item:drawInInventaire(position, ConfigGame.scale)
+        end
+
+
+    end
+
+
+    function this:updatePlayerUseItem(dt)
+        if self.mouseService:leftButtonIsPressed() then
+            local item = self.playerService.player.inventaire.slotEquipe
+            if item.itemType ~= "empty" then
+                item:apply(dt)
+            end
         end
     end
 

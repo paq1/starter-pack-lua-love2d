@@ -36,6 +36,10 @@ function KeyboardService:new()
         return love.keyboard.isDown("f1")
     end
 
+    function this:kp1IsDown()
+        return love.keyboard.isDown("kp1")
+    end
+
     return this
 end
 
