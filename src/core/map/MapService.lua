@@ -33,30 +33,33 @@ function MapService:new(
         ordoringElements = {}
     }
 
+    local axeEffect = AxeEffect:new(this.map, this.playerService.player)
+    local torchEffect = TorchEffect:new(this.map, this.playerService.player)
+
     this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
 
     this.items = {
         Axe:new(
-                AxeEffect:new(this, this.playerService),
+                axeEffect,
                 this.imageFactory,
                 this.rendererService,
                  {x = 32, y = 32 * 5}
         ),
         Axe:new(
-                AxeEffect:new(this, this.playerService),
+                axeEffect,
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 7}
         ),
         Torch:new(
-                TorchEffect:new(this, this.playerService),
+                torchEffect,
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 8},
                 10
         ),
         Torch:new(
-                TorchEffect:new(this, this.playerService),
+                torchEffect,
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 9},
