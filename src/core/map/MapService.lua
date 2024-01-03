@@ -54,6 +54,13 @@ function MapService:new(
                 this.rendererService,
                 {x = 32, y = 32 * 8},
                 10
+        ),
+        Torch:new(
+                TorchEffect:new(this, this.playerService),
+                this.imageFactory,
+                this.rendererService,
+                {x = 32, y = 32 * 9},
+                10
         )
     }
 

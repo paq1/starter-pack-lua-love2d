@@ -19,13 +19,18 @@ function TorchItem:new(
         effect = effect,
         imageFactory = imageFactory,
         rendererService = rendererService,
-        nombre = nombre
+        nombre = nombre,
+        name = "torche"
     }
 
     function this:apply(dt)
         if self.effect:apply(dt) then
             self.nombre = self.nombre - 1
         end
+    end
+
+    function this:add(nb)
+        self.nombre = self.nombre + nb
     end
 
     function this:needDelete()
