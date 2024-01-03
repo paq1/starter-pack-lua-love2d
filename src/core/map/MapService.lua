@@ -6,10 +6,7 @@ local ElementType = require("src/core/elements/ElementType")
 local TreeCategory = require("src/core/map/TreeCategory")
 
 local Axe = require("src/core/items/tools/axe/Axe")
-local AxeEffect = require("src/core/items/tools/axe/AxeEffect")
-
 local Torch = require("src/core/items/consommable/torch/Torch")
-local TorchEffect = require("src/core/items/consommable/torch/TorchEffect")
 
 function MapService:new(
         map --[[Map]],
@@ -19,7 +16,8 @@ function MapService:new(
         playerService --[[PlayerService]],
         cameraService --[[CameraService]],
         canvasService --[[CanvasService]],
-        animationFactory --[[AnimationFactory]]
+        animationFactory --[[AnimationFactory]],
+        itemSideEffectFactory --[[ItemSideEffectFactory]]
 )
     local this = {
         map = map,
@@ -30,36 +28,34 @@ function MapService:new(
         cameraService = cameraService,
         canvasService = canvasService,
         animationFactory = animationFactory,
+        itemSideEffectFactory = itemSideEffectFactory,
         ordoringElements = {}
     }
-
-    local axeEffect = AxeEffect:new(this.map, this.playerService.player)
-    local torchEffect = TorchEffect:new(this.map, this.playerService.player)
 
     this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
 
     this.items = {
         Axe:new(
-                axeEffect,
+                this.itemSideEffectFactory:getEffect("axe"),
                 this.imageFactory,
                 this.rendererService,
                  {x = 32, y = 32 * 5}
         ),
         Axe:new(
-                axeEffect,
+                this.itemSideEffectFactory:getEffect("axe"),
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 7}
         ),
         Torch:new(
-                torchEffect,
+                this.itemSideEffectFactory:getEffect("torch"),
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 8},
                 10
         ),
         Torch:new(
-                torchEffect,
+                this.itemSideEffectFactory:getEffect("torch"),
                 this.imageFactory,
                 this.rendererService,
                 {x = 32, y = 32 * 9},

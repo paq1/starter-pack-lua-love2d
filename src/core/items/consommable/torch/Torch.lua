@@ -4,7 +4,7 @@ local ItemType = require("src/core/items/ItemType")
 local HitBox = require("src/core/hitbox/HitBox")
 
 function TorchItem:new(
-        effect --[[TorchEffect]],
+        effect --[[TorchSideEffect]],
         imageFactory --[[ImageFactory]],
         rendererService --[[RendererService]],
         position,

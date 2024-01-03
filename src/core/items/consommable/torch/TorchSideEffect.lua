@@ -1,6 +1,6 @@
-local TorchEffect = {}
+local TorchSideEffect = {}
 
-function TorchEffect:new(
+function TorchSideEffect:new(
         map --[[Map]],
         player --[[Player]]
 )
@@ -22,4 +22,4 @@ function TorchEffect:new(
     return this
 end
 
-return TorchEffect
+return TorchSideEffect

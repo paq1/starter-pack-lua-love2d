@@ -4,7 +4,7 @@ local ItemType = require("src/core/items/ItemType")
 local HitBox = require("src/core/hitbox/HitBox")
 
 function AxeItem:new(
-        effect --[[AxeEffect]],
+        effect --[[AxeSideEffect]],
         imageFactory --[[ImageFactory]],
         rendererService --[[RendererService]],
         position

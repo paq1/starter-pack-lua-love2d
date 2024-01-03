@@ -11,6 +11,7 @@ local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
 local ItemType = require("src/core/items/ItemType")
 local InventaireService = require("src/core/inventaire/InventaireService")
+local ItemSideEffectFactory = require("src/core/items/ItemSideEffectFactory")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -47,12 +48,19 @@ function Game:new(
             this.windowService,
             this.imageFactory
     )
-
-
     this.mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
+
+    local player = Player:new(ConfigGame.positionInitialePlayer, playerSize)
+    local map = Map:new(
+            ConfigMap.size,
+            ConfigMap.tileSize,
+            this.randomService,
+            this.perlinNoiseService
+    )
+    local itemSideEffectFactory = ItemSideEffectFactory:new(map, player)
 
     this.playerService = PlayerService:new(
             this.keyboardService,
@@ -64,24 +72,19 @@ function Game:new(
             ),
             this.audioService,
             this.cameraService,
-            Player:new(ConfigGame.positionInitialePlayer, playerSize)
+            player
     )
 
-
     this.mapService = MapService:new(
-            Map:new(
-                    ConfigMap.size,
-                    ConfigMap.tileSize,
-                    this.randomService,
-                    this.perlinNoiseService
-            ),
+            map,
             this.imageFactory,
             this.rendererService,
             this.audioService,
             this.playerService,
             this.cameraService,
             this.canvasService,
-            this.animationFactory
+            this.animationFactory,
+            itemSideEffectFactory
     )
 
     function this:update(dt)

@@ -1,8 +1,8 @@
-local AxeEffect = {}
+local AxeSideEffect = {}
 
 local ElementType = require("src/core/elements/ElementType")
 
-function AxeEffect:new(
+function AxeSideEffect:new(
         map --[[Map]],
         player --[[Player]]
 )
@@ -28,4 +28,4 @@ function AxeEffect:new(
     return this
 end
 
-return AxeEffect
+return AxeSideEffect
