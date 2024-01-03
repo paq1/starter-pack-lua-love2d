@@ -13,6 +13,7 @@ function ImageFactory:new()
         cursorTarget = love.graphics.newImage("assets/sprites/hud/cursorTarget.png"),
         itemInventaire = love.graphics.newImage("assets/sprites/hud/itemInventairePart.png"),
         itemAxe = love.graphics.newImage("assets/sprites/hud/items/axe.png"),
+        itemTorch = love.graphics.newImage("assets/sprites/hud/items/torche.png"),
 
         -- sprite sheet image
         snakeSpritesheet = love.graphics.newImage("assets/sprites/actor/Snake.png"),

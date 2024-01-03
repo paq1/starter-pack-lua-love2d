@@ -88,7 +88,6 @@ function Game:new(
         self.audioService:update()
 
         self:updatePlayerUseItem(dt)
-        self:updatePlayerPutLight()
 
         self.playerService:update(dt, self.mapService.map)
         self.mapService:update(dt)
@@ -118,18 +117,6 @@ function Game:new(
             if item.itemType ~= ItemType.EMPTY then
                 item:apply(dt)
             end
-        end
-    end
-
-    function this:updatePlayerPutLight()
-        local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
-        local playerPosition = {
-            x = (coordPlayer.x * self.mapService.map.tileSize) + 16,
-            y = (coordPlayer.y * self.mapService.map.tileSize) + 16
-        }
-
-        if self.keyboardService:actionKeyIsDown() then
-            self.mapService.map:addLight(playerPosition)
         end
     end
 
