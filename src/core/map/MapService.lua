@@ -21,52 +21,44 @@ function MapService:new(
 )
     local this = {
         map = map,
-        imageFactory = imageFactory,
-        rendererService = rendererService,
-        audioService = audioService,
-        playerService = playerService,
-        cameraService = cameraService,
-        canvasService = canvasService,
-        animationFactory = animationFactory,
-        itemSideEffectFactory = itemSideEffectFactory,
         ordoringElements = {}
     }
 
-    this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
+    this.canvasTilemap = canvasService:fromMapToTilemapCanvas(map)
 
     this.items = {
         Axe:new(
-                this.itemSideEffectFactory:getEffect("axe"),
-                this.imageFactory,
-                this.rendererService,
+                itemSideEffectFactory:getEffect("axe"),
+                imageFactory,
+                rendererService,
                  {x = 32, y = 32 * 5}
         ),
         Axe:new(
-                this.itemSideEffectFactory:getEffect("axe"),
-                this.imageFactory,
-                this.rendererService,
+                itemSideEffectFactory:getEffect("axe"),
+                imageFactory,
+                rendererService,
                 {x = 32, y = 32 * 7}
         ),
         Torch:new(
-                this.itemSideEffectFactory:getEffect("torch"),
-                this.imageFactory,
-                this.rendererService,
+                itemSideEffectFactory:getEffect("torch"),
+                imageFactory,
+                rendererService,
                 {x = 32, y = 32 * 8},
                 10
         ),
         Torch:new(
-                this.itemSideEffectFactory:getEffect("torch"),
-                this.imageFactory,
-                this.rendererService,
+                itemSideEffectFactory:getEffect("torch"),
+                imageFactory,
+                rendererService,
                 {x = 32, y = 32 * 9},
                 10
         )
     }
 
     function this:update(dt)
-        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
-        self.animationFactory.torcheAnimation:update(dt)
-        self.animationFactory.indicationAnimation:update(dt)
+        audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+        animationFactory.torcheAnimation:update(dt)
+        animationFactory.indicationAnimation:update(dt)
 
         -- on tri les elements à afficher
         local elements = self:getElementsForDraw()
@@ -78,9 +70,9 @@ function MapService:new(
 
         debugMode = debugMode or false
 
-        local camPos = self.cameraService.position
+        local camPos = cameraService.position
 
-        self.rendererService:render(
+        rendererService:render(
                 self.canvasTilemap,
                 { x = -camPos.x, y = -camPos.y },
                 ConfigGame.scale
@@ -110,11 +102,11 @@ function MapService:new(
     end
 
     function this:drawIndication()
-        local camPos = self.cameraService.position
+        local camPos = cameraService.position
 
         for _,item in pairs(self.items) do
             local position = item.position
-            self.animationFactory.indicationAnimation:draw(0, {
+            animationFactory.indicationAnimation:draw(0, {
                 x = (position.x) * ConfigGame.scale - camPos.x,
                 y = (position.y - 32) * ConfigGame.scale - camPos.y
             }, ConfigGame.scale)
@@ -123,7 +115,7 @@ function MapService:new(
 
 
     function this:minRowAndCol(offset)
-        local playerPos = self.playerService.player.position
+        local playerPos = playerService.player.position
 
         local minRow = math.floor(playerPos.y / self.map.tileSize) - offset
         local minCol = math.floor(playerPos.x / self.map.tileSize) - offset
@@ -135,7 +127,7 @@ function MapService:new(
     end
 
     function this:maxRowAndCol(offset)
-        local playerPos = self.playerService.player.position
+        local playerPos = playerService.player.position
         local maxRowPlayer = math.floor(playerPos.y / self.map.tileSize) + offset
         local maxColPlayer = math.floor(playerPos.x / self.map.tileSize) + offset
         local maxRowFromMap = #self.map.tilemap
@@ -194,8 +186,8 @@ function MapService:new(
 
 
         local playerPosition = {
-            x = self.playerService.player.position.x,
-            y = self.playerService.player.position.y
+            x = playerService.player.position.x,
+            y = playerService.player.position.y
         }
         table.insert(elements, {position = playerPosition, elementType = ElementType.PLAYER})
 
@@ -223,13 +215,13 @@ function MapService:new(
             if element.elementType == ElementType.ARBRE then
 
                 local arbreType = element.arbreType
-                local imageArbre = self.imageFactory.fullTree
+                local imageArbre = imageFactory.fullTree
 
                 if arbreType == TreeCategory.SAPIN then
-                    imageArbre = self.imageFactory.sapin
+                    imageArbre = imageFactory.sapin
                 end
 
-                self.rendererService:render(
+                rendererService:render(
                         imageArbre,
                         { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale + offsetBasiqueElement) },
                         ConfigGame.scale
@@ -237,7 +229,7 @@ function MapService:new(
             end
 
             if element.elementType == ElementType.PLAYER then
-                self.playerService:draw(debugMode)
+                playerService:draw(debugMode)
             end
 
             if element.elementType == ElementType.TORCHE then
@@ -245,7 +237,7 @@ function MapService:new(
                     x = drawingPosition.x - offsetBasiqueElement,
                     y = drawingPosition.y - offsetBasiqueElement
                 }
-                self.animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
+                animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
             end
         end
     end
@@ -259,7 +251,7 @@ function MapService:new(
         }
         local coord = self.map:getCoordTile(footPosition)
 
-        self.rendererService:print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", { x = at.x, y = at.y })
+        rendererService:print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", { x = at.x, y = at.y })
     end
 
     return this

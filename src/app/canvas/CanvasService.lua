@@ -5,9 +5,7 @@ local TileType = require("src/core/map/TileType")
 function CanvasService:new(
         imageFactory --[[ImageFactory]]
 )
-    local this = {
-        imageFactory = imageFactory
-    }
+    local this = {}
 
     function this:fromMapToTilemapCanvas(map --[[Map]])
         local pixelMapWidth = (#map.tilemap[1] + 1) * map.tileSize
@@ -22,8 +20,8 @@ function CanvasService:new(
                     local tile = map.tilemap[r + 1][c + 1]
                     if tile.tileType == TileType.HERBE then
                         love.graphics.draw(
-                                self.imageFactory.tileForestSpriteSheetImage,
-                                self.imageFactory.tileForestSpriteSheet.quads[tile.side],
+                                imageFactory.tileForestSpriteSheetImage,
+                                imageFactory.tileForestSpriteSheet.quads[tile.side],
                                 c * map.tileSize,
                                 r * map.tileSize
                         )

@@ -27,28 +27,15 @@ function Game:new(
         animationFactory --[[AnimationFactory]],
         perlinNoiseService --[[PerlinNoiseService]]
 )
-    local this = {
-        keyboardService = keyboardService,
-        rendererService = rendererService,
-        imageFactory = imageFactory,
-        animationService = animationService,
-        audioService = audioService,
-        randomService = randomService,
-        windowService = windowService,
-        mouseService = mouseService,
-        canvasService = canvasService,
-        lightService = lightService,
-        animationFactory = animationFactory,
-        perlinNoiseService = perlinNoiseService
-    }
-    this.cameraService = CameraService:new(this.windowService)
+    local this = {}
+    this.cameraService = CameraService:new(windowService)
     this.inventaireService = InventaireService:new(
-            this.keyboardService,
-            this.rendererService,
-            this.windowService,
-            this.imageFactory
+            keyboardService,
+            rendererService,
+            windowService,
+            imageFactory
     )
-    this.mouseService:setVisibility(false)
+    mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
@@ -57,38 +44,38 @@ function Game:new(
     local map = Map:new(
             ConfigMap.size,
             ConfigMap.tileSize,
-            this.randomService,
-            this.perlinNoiseService
+            randomService,
+            perlinNoiseService
     )
     local itemSideEffectFactory = ItemSideEffectFactory:new(map, player)
 
     this.playerService = PlayerService:new(
-            this.keyboardService,
-            this.animationService:createHorizontalAnimation(
-                    this.imageFactory.personnageSpritesheet,
+            keyboardService,
+            animationService:createHorizontalAnimation(
+                    imageFactory.personnageSpritesheet,
                     tailleUneImageDeLAnimation,
                     tailleUneImageDeLAnimation,
                     1
             ),
-            this.audioService,
+            audioService,
             this.cameraService,
             player
     )
 
     this.mapService = MapService:new(
             map,
-            this.imageFactory,
-            this.rendererService,
-            this.audioService,
+            imageFactory,
+            rendererService,
+            audioService,
             this.playerService,
             this.cameraService,
-            this.canvasService,
-            this.animationFactory,
+            canvasService,
+            animationFactory,
             itemSideEffectFactory
     )
 
     function this:update(dt)
-        self.audioService:update()
+        audioService:update()
 
         self:playerCanUseEquippedItem(dt)
         self:playerCanTakeItemOnMap()
@@ -106,22 +93,22 @@ function Game:new(
 
         debugMode = debugMode or false
 
-        self.lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
+        lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
         self.mapService:render(debugMode)
-        self.lightService:resetShader()
+        lightService:resetShader()
 
         self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
         self.mapService:drawIndication()
 
-        self.mouseService:draw()
+        mouseService:draw()
         if ConfigApp.debug then
-            self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
+            self.mapService:printCurrentCoordPlayerOnMap({ x = windowService:getCenter().x, y = 0 }, self.playerService.player)
             self:printNbLight({ x = 0, y = 64 })
         end
     end
 
     function this:playerCanUseEquippedItem(dt)
-        if self.mouseService:leftButtonIsPressed() then
+        if mouseService:leftButtonIsPressed() then
             local item = self.playerService.player.inventaire.slotEquipe
             if item.itemType ~= ItemType.EMPTY then
                 item:apply(dt)
@@ -145,7 +132,7 @@ function Game:new(
 
     function this:printNbLight(at)
         at = at or { x = 0, y = 0 }
-        self.rendererService:print("lights : " .. #self.mapService.map.lights, at)
+        rendererService:print("lights : " .. #self.mapService.map.lights, at)
     end
 
     return this

@@ -8,22 +8,17 @@ function InventaireService:new(
         windowService --[[WindowService]],
         imageFactory --[[ImageFactory]]
 )
-    local this = {
-        keyboardService = keyboardService,
-        rendererService = rendererService,
-        windowService = windowService,
-        imageFactory = imageFactory
-    }
+    local this = {}
 
     this.slotSelected = { false, false, false, false, false }
 
     function this:update(dt, inventaire --[[BarreInventaire]])
 
-        self:updateOne(dt, inventaire, self.keyboardService:slotItem1IsDown(), 1)
-        self:updateOne(dt, inventaire, self.keyboardService:slotItem2IsDown(), 2)
-        self:updateOne(dt, inventaire, self.keyboardService:slotItem3IsDown(), 3)
-        self:updateOne(dt, inventaire, self.keyboardService:slotItem4IsDown(), 4)
-        self:updateOne(dt, inventaire, self.keyboardService:slotItem5IsDown(), 5)
+        self:updateOne(dt, inventaire, keyboardService:slotItem1IsDown(), 1)
+        self:updateOne(dt, inventaire, keyboardService:slotItem2IsDown(), 2)
+        self:updateOne(dt, inventaire, keyboardService:slotItem3IsDown(), 3)
+        self:updateOne(dt, inventaire, keyboardService:slotItem4IsDown(), 4)
+        self:updateOne(dt, inventaire, keyboardService:slotItem5IsDown(), 5)
 
         this:updateClearItem(inventaire)
 
@@ -57,7 +52,7 @@ function InventaireService:new(
     function this:draw(inventaire --[[BarreInventaire]], scale)
         local items = inventaire.items
         local nbSlots = #items
-        local windowSize = self.windowService:getSize()
+        local windowSize = windowService:getSize()
         local OneSlotWidth = 32
         local totalPixelWidthInventaire = nbSlots * OneSlotWidth * scale
         for index = 1, nbSlots do
@@ -69,8 +64,8 @@ function InventaireService:new(
                 y = windowSize.height - 64 * scale
             }
 
-            self.rendererService:render(
-                    self.imageFactory.itemInventaire,
+            rendererService:render(
+                    imageFactory.itemInventaire,
                     position,
                     scale
             )
@@ -90,8 +85,8 @@ function InventaireService:new(
             y = windowSize.height - 64 * scale
         }
 
-        self.rendererService:render(
-                self.imageFactory.itemInventaire,
+        rendererService:render(
+                imageFactory.itemInventaire,
                 position,
                 scale
         )

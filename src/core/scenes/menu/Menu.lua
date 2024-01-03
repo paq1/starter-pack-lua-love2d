@@ -2,7 +2,6 @@ local Menu = {}
 
 local ScenesName = require("src/core/scenes/ScenesName")
 local DynamicTextAppearDisappear = require("src/core/text/DynamicTextAppearDisappear")
-local DynamicTextAppear = require("src/core/text/DynamicTextAppear")
 
 function Menu:new(
         keyboardService --[[KeyboardService]],
@@ -15,20 +14,10 @@ function Menu:new(
         mouseService --[[MouseService]],
         canvasService --[[CanvasService]]
 )
-    local this = {
-        keyboardService = keyboardService,
-        rendererService = rendererService,
-        imageFactory = imageFactory,
-        animationService = animationService,
-        audioService = audioService,
-        randomService = randomService,
-        windowService = windowService,
-        mouseService = mouseService,
-        canvasService = canvasService
-    }
+    local this = {}
     this.imagePlayerSize = 32
 
-    this.playerAnimation = this.animationService:createHorizontalAnimation(
+    this.playerAnimation = animationService:createHorizontalAnimation(
             imageFactory.personnageSpritesheet, this.imagePlayerSize, this.imagePlayerSize, 2
     )
 
@@ -51,11 +40,11 @@ function Menu:new(
         debugMode = debugMode or false
         this:drawPlayer()
         this:printPressSpace()
-        self.mouseService:draw()
+        mouseService:draw()
     end
 
     function this:drawPlayer()
-        local windowCenterPosition = self.windowService:getCenter()
+        local windowCenterPosition = windowService:getCenter()
         local scale = 5
 
         local drawingPostion = {
@@ -66,8 +55,8 @@ function Menu:new(
     end
 
     function this:printPressSpace()
-        local windowCenterPosition = self.windowService:getCenter()
-        local windowSize = self.windowService:getSize()
+        local windowCenterPosition = windowService:getCenter()
+        local windowSize = windowService:getSize()
         --local text = "press space to start"
         local text = self.dynText.currentText
         local printPosition = {

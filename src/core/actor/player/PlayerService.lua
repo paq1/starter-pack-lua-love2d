@@ -11,11 +11,8 @@ function PlayerService:new(
         player --[[Player]]
 )
     local this = {
-        inputService = inputService,
         sideIndex = 0,
         anim = animation,
-        audioService = audioService,
-        cameraService = cameraService,
         player = player
     }
 
@@ -26,12 +23,12 @@ function PlayerService:new(
         self.anim:update(dt, false)
 
         if self:updateDeplacement(dt, 200, map) then
-            self.audioService:setStepSongStatus(true)
+            audioService:setStepSongStatus(true)
         else
-            self.audioService:setStepSongStatus(false)
+            audioService:setStepSongStatus(false)
         end
 
-        self.cameraService:updatePosition({
+        cameraService:updatePosition({
             x = self.player.position.x * ConfigGame.scale,
             y = self.player.position.y * ConfigGame.scale
         })
@@ -41,11 +38,11 @@ function PlayerService:new(
 
         debugMode = debugMode or false
 
-        local drawPos = self:playerDrawingPosition(self.cameraService)
+        local drawPos = self:playerDrawingPosition(cameraService)
         self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
 
         if debugMode then
-            local camPos = self.cameraService.position
+            local camPos = cameraService.position
             local hitbox = player:getHitBox()
             local position = hitbox.position
             local w, h = hitbox.size.width, hitbox.size.height
@@ -83,30 +80,30 @@ function PlayerService:new(
     -- return true si le joueur a bougé sinon false
     function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
-        if (self.inputService.ctrlIsDown()) then
+        if (inputService.ctrlIsDown()) then
             vitesse = vitesse + 150.0
         end
         local seDeplace = false
 
-        if self.inputService:upIsDown() then
+        if inputService:upIsDown() then
             --self.sideIndex = 2
             local isMoving = self:movingPlayer({ x = 0, y = - vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:rightIsDown() then
+        if inputService:rightIsDown() then
             self.sideIndex = 0
             local isMoving = self:movingPlayer({ x = vitesse * dt, y = 0}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:downIsDown() then
+        if inputService:downIsDown() then
             --self.sideIndex = 3
             local isMoving = self:movingPlayer({ x = 0, y = vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:leftIsDown() then
+        if inputService:leftIsDown() then
             self.sideIndex = 1
             local isMoving = self:movingPlayer({ x = - vitesse * dt, y = 0}, map)
             if isMoving then seDeplace = true end
@@ -117,8 +114,8 @@ function PlayerService:new(
 
     function this:playerDrawingPosition()
         return {
-            x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - self.cameraService.position.x,
-            y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - self.cameraService.position.y
+            x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - cameraService.position.x,
+            y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - cameraService.position.y
         }
     end
 
