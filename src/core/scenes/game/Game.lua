@@ -10,6 +10,7 @@ local ConfigApp = require("src/core/ConfigApp")
 local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
 local ItemType = require("src/core/items/ItemType")
+local InventaireService = require("src/core/inventaire/InventaireService")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -40,9 +41,15 @@ function Game:new(
         perlinNoiseService = perlinNoiseService
     }
     this.cameraService = CameraService:new(this.windowService)
-    this.mouseService:setVisibility(false)
+    this.inventaireService = InventaireService:new(
+            this.keyboardService,
+            this.rendererService,
+            this.windowService,
+            this.imageFactory
+    )
 
-    this.kp1Used = false
+
+    this.mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
@@ -86,14 +93,7 @@ function Game:new(
         self.playerService:update(dt, self.mapService.map)
         self.mapService:update(dt)
 
-        if self.keyboardService:kp1IsDown() and not self.kp1Used then
-            self.kp1Used = true
-            self.playerService.player.inventaire:equipeItem(1)
-        end
-
-        if not self.keyboardService:kp1IsDown() then
-            self.kp1Used = false
-        end
+        self.inventaireService:update(dt, self.playerService.player.inventaire)
 
         return ScenesName.NONE
     end
@@ -103,7 +103,7 @@ function Game:new(
         self.mapService:render()
         self.lightService:resetShader()
 
-        self:drawInventaire()
+        self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
 
         self.mouseService:draw()
         if ConfigApp.debug then
@@ -112,61 +112,10 @@ function Game:new(
         end
     end
 
-    function this:drawInventaire()
-        local inventaire = self.playerService.player.inventaire
-        local items = inventaire.items
-        local nbSlots = #items
-        local windowSize = self.windowService:getSize()
-        local OneSlotWidth = 32
-        local totalPixelWidthInventaire = nbSlots * OneSlotWidth * ConfigGame.scale
-        for index = 1, nbSlots do
-
-            local item = items[index]
-
-            local position = {
-                x = (index - 1) * 32 * ConfigGame.scale + windowSize.width / 2 - totalPixelWidthInventaire / 2,
-                y = windowSize.height - 64 * ConfigGame.scale
-            }
-
-            self.rendererService:render(
-                    self.imageFactory.itemInventaire,
-                    position,
-                    ConfigGame.scale
-            )
-
-            if item.itemType ~= ItemType.EMPTY then
-                item:drawInInventaire(position, ConfigGame.scale)
-            end
-        end
-
-
-        -- item equiper joueur
-        local item = inventaire.slotEquipe
-        local offsetSlotEquipe = 32 * ConfigGame.scale
-
-        local position = {
-            x = (nbSlots) * 32 * ConfigGame.scale + windowSize.width / 2 - totalPixelWidthInventaire / 2 + offsetSlotEquipe,
-            y = windowSize.height - 64 * ConfigGame.scale
-        }
-
-        self.rendererService:render(
-                self.imageFactory.itemInventaire,
-                position,
-                ConfigGame.scale
-        )
-
-        if item.itemType ~= ItemType.EMPTY then
-            item:drawInInventaire(position, ConfigGame.scale)
-        end
-
-
-    end
-
-
     function this:updatePlayerUseItem(dt)
         if self.mouseService:leftButtonIsPressed() then
             local item = self.playerService.player.inventaire.slotEquipe
-            if item.itemType ~= "empty" then
+            if item.itemType ~= ItemType.EMPTY then
                 item:apply(dt)
             end
         end

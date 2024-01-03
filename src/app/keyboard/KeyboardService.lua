@@ -36,8 +36,20 @@ function KeyboardService:new()
         return love.keyboard.isDown("f1")
     end
 
-    function this:kp1IsDown()
+    function this:slotItem1IsDown()
         return love.keyboard.isDown("kp1")
+    end
+    function this:slotItem2IsDown()
+        return love.keyboard.isDown("kp2")
+    end
+    function this:slotItem3IsDown()
+        return love.keyboard.isDown("kp3")
+    end
+    function this:slotItem4IsDown()
+        return love.keyboard.isDown("kp4")
+    end
+    function this:slotItem5IsDown()
+        return love.keyboard.isDown("kp5")
     end
 
     return this
