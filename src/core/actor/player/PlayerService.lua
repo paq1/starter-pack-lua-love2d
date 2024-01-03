@@ -103,6 +103,14 @@ function PlayerService:new(
     function this:draw()
         local drawPos = self:playerDrawingPosition(self.cameraService)
         self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
+
+        -- todo décommenter pour le debug
+        --local camPos = self.cameraService.position
+        --local hitbox = player:getHitBox()
+        --local position = hitbox.position
+        --local w, h = hitbox.size.width, hitbox.size.height
+        --
+        --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x, position.y * ConfigGame.scale - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
     end
 
     return this

@@ -1,6 +1,7 @@
 local AxeItem = {}
 
 local ItemType = require("src/core/items/ItemType")
+local HitBox = require("src/core/hitbox/HitBox")
 
 function AxeItem:new(
         effect --[[AxeEffect]],
@@ -21,6 +22,13 @@ function AxeItem:new(
     function this:apply(dt)
         self.effect:apply(dt)
         -- ne fait rien d'autre a part utiliser l'effet (n'a pas de durablilité ... etc)
+    end
+
+    function this:getHitBox()
+        if not self:existOnMap() then
+            return {}
+        end
+        return HitBox:new(self.position, { width = 32, height = 32 })
     end
 
     function this:existOnMap()

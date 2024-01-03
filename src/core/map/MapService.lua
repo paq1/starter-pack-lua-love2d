@@ -65,11 +65,10 @@ function MapService:new(
         table.sort(self.ordoringElements, compareElement)
 
         -- joueur peut ramasser item
-        local playerPosition = self.playerService.player.position
+        local playerHitBox = self.playerService.player:getHitBox()
         for index, item in pairs(self.items) do
-            local itemPosition = item.position
-            if itemPosition.x > playerPosition.x and itemPosition.x < playerPosition.x + 32 and itemPosition.y > playerPosition.y and itemPosition.y < playerPosition.y + 32 then
-                --self.items[index].position = {} -- disparait de la map
+            local itemHitBox = item:getHitBox()
+            if playerHitBox:collide(itemHitBox) then
                 local successAdd = playerService.player.inventaire:addItem(self.items[index])
                 if successAdd then
                     self.items[index].position = {} -- disparait de la map
@@ -93,6 +92,13 @@ function MapService:new(
         -- affichage des items sur la map
         for _,item in pairs(self.items) do
             item:draw(camPos, ConfigGame.scale)
+
+            -- todo decommenter si on veut voir les hitboxes des items
+            --local hitbox = item:getHitBox()
+            --local position = hitbox.position
+            --local w, h = hitbox.size.width, hitbox.size.height
+            --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x,( position.y * ConfigGame.scale) - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
+
         end
     end
 
