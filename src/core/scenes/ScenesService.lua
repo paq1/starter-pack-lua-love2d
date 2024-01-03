@@ -73,8 +73,9 @@ function ScenesService:new(
         end
     end
 
-    function this:draw()
-        self.scenes[this.currentScene]:draw()
+    function this:draw(debugMode)
+        debugMode = debugMode or false
+        self.scenes[this.currentScene]:draw(debugMode)
     end
 
     return this

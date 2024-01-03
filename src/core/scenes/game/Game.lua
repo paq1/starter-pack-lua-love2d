@@ -87,19 +87,24 @@ function Game:new(
     function this:update(dt)
         self.audioService:update()
 
-        self:updatePlayerUseItem(dt)
+        self:playerCanUseEquippedItem(dt)
+        self:playerCanTakeItemOnMap()
 
         self.playerService:update(dt, self.mapService.map)
         self.mapService:update(dt)
 
         self.inventaireService:update(dt, self.playerService.player.inventaire)
 
+
         return ScenesName.NONE
     end
 
-    function this:draw()
+    function this:draw(debugMode)
+
+        debugMode = debugMode or false
+
         self.lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
-        self.mapService:render()
+        self.mapService:render(debugMode)
         self.lightService:resetShader()
 
         self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
@@ -112,11 +117,25 @@ function Game:new(
         end
     end
 
-    function this:updatePlayerUseItem(dt)
+    function this:playerCanUseEquippedItem(dt)
         if self.mouseService:leftButtonIsPressed() then
             local item = self.playerService.player.inventaire.slotEquipe
             if item.itemType ~= ItemType.EMPTY then
                 item:apply(dt)
+            end
+        end
+    end
+
+    function this:playerCanTakeItemOnMap()
+        local playerHitBox = self.playerService.player:getHitBox()
+        for index, item in pairs(self.mapService.items) do
+            local itemHitBox = item:getHitBox()
+            if playerHitBox:collide(itemHitBox) then
+                local successAdd = self.playerService.player.inventaire:addItem(self.mapService.items[index])
+                if successAdd then
+                    self.mapService.items[index].position = {} -- disparait de la map
+                    table.remove(self.mapService.items, index)
+                end
             end
         end
     end

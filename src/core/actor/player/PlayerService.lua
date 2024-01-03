@@ -25,9 +25,7 @@ function PlayerService:new(
     )
         self.anim:update(dt, false)
 
-        local seDeplace = self:updateDeplacement(dt, 200, map)
-
-        if seDeplace then
+        if self:updateDeplacement(dt, 200, map) then
             self.audioService:setStepSongStatus(true)
         else
             self.audioService:setStepSongStatus(false)
@@ -37,6 +35,30 @@ function PlayerService:new(
             x = self.player.position.x * ConfigGame.scale,
             y = self.player.position.y * ConfigGame.scale
         })
+    end
+
+    function this:draw(debugMode)
+
+        debugMode = debugMode or false
+
+        local drawPos = self:playerDrawingPosition(self.cameraService)
+        self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
+
+        if debugMode then
+            local camPos = self.cameraService.position
+            local hitbox = player:getHitBox()
+            local position = hitbox.position
+            local w, h = hitbox.size.width, hitbox.size.height
+
+            -- MKDMKD fixme mettre ca dans un service
+            love.graphics.rectangle(
+                    "line",
+                    (position.x * ConfigGame.scale) - camPos.x,
+                    position.y * ConfigGame.scale - camPos.y,
+                    w * ConfigGame.scale,
+                    h * ConfigGame.scale
+            )
+        end
     end
 
     -- return true si le joueur a bougé sinon false
@@ -98,19 +120,6 @@ function PlayerService:new(
             x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - self.cameraService.position.x,
             y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - self.cameraService.position.y
         }
-    end
-
-    function this:draw()
-        local drawPos = self:playerDrawingPosition(self.cameraService)
-        self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
-
-        -- todo décommenter pour le debug
-        --local camPos = self.cameraService.position
-        --local hitbox = player:getHitBox()
-        --local position = hitbox.position
-        --local w, h = hitbox.size.width, hitbox.size.height
-        --
-        --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x, position.y * ConfigGame.scale - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
     end
 
     return this

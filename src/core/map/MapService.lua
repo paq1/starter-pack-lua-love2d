@@ -69,14 +69,16 @@ function MapService:new(
         self.animationFactory.torcheAnimation:update(dt)
         self.animationFactory.indicationAnimation:update(dt)
 
+        -- on tri les elements à afficher
         local elements = self:getElementsForDraw()
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
-
-        self:playerCanTakeItem()
     end
 
-    function this:render()
+    function this:render(debugMode)
+
+        debugMode = debugMode or false
+
         local camPos = self.cameraService.position
 
         self.rendererService:render(
@@ -84,18 +86,27 @@ function MapService:new(
                 { x = -camPos.x, y = -camPos.y },
                 ConfigGame.scale
         )
-        self:renderElements(camPos)
+        self:renderElements(camPos, debugMode)
 
         -- todo les afficher dans l'ordre
         -- affichage des items sur la map
         for _,item in pairs(self.items) do
             item:draw(camPos, ConfigGame.scale)
             -- todo decommenter si on veut voir les hitboxes des items
-            --local hitbox = item:getHitBox()
-            --local position = hitbox.position
-            --local w, h = hitbox.size.width, hitbox.size.height
-            --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x,( position.y * ConfigGame.scale) - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
+            if debugMode then
+                local hitbox = item:getHitBox()
+                local position = hitbox.position
+                local w, h = hitbox.size.width, hitbox.size.height
 
+                -- MKDMKD fixme wrapper le rectangle dans un service
+                love.graphics.rectangle(
+                        "line",
+                        (position.x * ConfigGame.scale) - camPos.x,
+                        ( position.y * ConfigGame.scale) - camPos.y,
+                        w * ConfigGame.scale,
+                        h * ConfigGame.scale
+                )
+            end
         end
     end
 
@@ -108,20 +119,6 @@ function MapService:new(
                 x = (position.x) * ConfigGame.scale - camPos.x,
                 y = (position.y - 32) * ConfigGame.scale - camPos.y
             }, ConfigGame.scale)
-        end
-    end
-
-    function this:playerCanTakeItem()
-        local playerHitBox = self.playerService.player:getHitBox()
-        for index, item in pairs(self.items) do
-            local itemHitBox = item:getHitBox()
-            if playerHitBox:collide(itemHitBox) then
-                local successAdd = playerService.player.inventaire:addItem(self.items[index])
-                if successAdd then
-                    self.items[index].position = {} -- disparait de la map
-                    table.remove(self.items, index)
-                end
-            end
         end
     end
 
@@ -210,7 +207,10 @@ function MapService:new(
         return element1.position.y < element2.position.y
     end
 
-    function this:renderElements(camPos)
+    function this:renderElements(camPos, debugMode)
+
+        debugMode = debugMode or false
+
         local heightSizeOfTree = 64.0
         local offsetTreeY = heightSizeOfTree / 2.0
         local offsetBasiqueElement = (16 * ConfigGame.scale)
@@ -238,7 +238,7 @@ function MapService:new(
             end
 
             if element.elementType == ElementType.PLAYER then
-                self.playerService:draw(cameraService)
+                self.playerService:draw(debugMode)
             end
 
             if element.elementType == ElementType.TORCHE then

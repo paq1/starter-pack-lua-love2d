@@ -47,7 +47,8 @@ function Menu:new(
         return ScenesName.NONE
     end
 
-    function this:draw()
+    function this:draw(debugMode)
+        debugMode = debugMode or false
         this:drawPlayer()
         this:printPressSpace()
         self.mouseService:draw()
