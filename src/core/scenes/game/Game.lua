@@ -6,7 +6,6 @@ local Map = require("src/core/map/Map")
 local MapService = require("src/core/map/MapService")
 local CameraService = require("src/core/camera/CameraService")
 local ConfigMap = require("src/core/map/ConfigMap")
-local ConfigApp = require("src/core/ConfigApp")
 local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
 local ItemType = require("src/core/items/ItemType")
@@ -101,7 +100,7 @@ function Game:new(
         self.mapService:drawIndication()
 
         mouseService:draw()
-        if ConfigApp.debug then
+        if debugMode then
             self.mapService:printCurrentCoordPlayerOnMap({ x = windowService:getCenter().x, y = 0 }, self.playerService.player)
             self:printNbLight({ x = 0, y = 64 })
         end
