@@ -64,18 +64,7 @@ function MapService:new(
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
 
-        -- joueur peut ramasser item
-        local playerHitBox = self.playerService.player:getHitBox()
-        for index, item in pairs(self.items) do
-            local itemHitBox = item:getHitBox()
-            if playerHitBox:collide(itemHitBox) then
-                local successAdd = playerService.player.inventaire:addItem(self.items[index])
-                if successAdd then
-                    self.items[index].position = {} -- disparait de la map
-                    table.remove(self.items, index)
-                end
-            end
-        end
+        self:playerCanTakeItem()
     end
 
     function this:render()
@@ -99,6 +88,20 @@ function MapService:new(
             --local w, h = hitbox.size.width, hitbox.size.height
             --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x,( position.y * ConfigGame.scale) - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
 
+        end
+    end
+
+    function this:playerCanTakeItem()
+        local playerHitBox = self.playerService.player:getHitBox()
+        for index, item in pairs(self.items) do
+            local itemHitBox = item:getHitBox()
+            if playerHitBox:collide(itemHitBox) then
+                local successAdd = playerService.player.inventaire:addItem(self.items[index])
+                if successAdd then
+                    self.items[index].position = {} -- disparait de la map
+                    table.remove(self.items, index)
+                end
+            end
         end
     end
 
