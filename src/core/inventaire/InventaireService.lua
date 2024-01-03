@@ -25,6 +25,8 @@ function InventaireService:new(
         self:updateOne(dt, inventaire, self.keyboardService:slotItem4IsDown(), 4)
         self:updateOne(dt, inventaire, self.keyboardService:slotItem5IsDown(), 5)
 
+        this:updateClearItem(inventaire)
+
     end
 
     function this:updateOne(dt, inventaire --[[BarreInventaire]], slotPressed, indexSlot)
@@ -34,6 +36,21 @@ function InventaireService:new(
         end
         if not slotPressed then
             self.slotSelected[indexSlot] = false
+        end
+    end
+
+    function this:updateClearItem(inventaire --[[BarreInventaire]])
+        for i = 1, #inventaire.items do
+            local item = inventaire.items[i]
+            if item.itemType ~= ItemType.EMPTY and item:needDelete() then
+                inventaire:removeOne(i)
+            end
+        end
+
+        if inventaire.slotEquipe.itemType ~= ItemType.EMPTY and inventaire.slotEquipe:needDelete() then
+            inventaire.slotEquipe = {
+                itemType = ItemType.EMPTY
+            }
         end
     end
 

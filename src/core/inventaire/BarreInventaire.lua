@@ -1,5 +1,7 @@
 local BarreInventaire = {}
 
+local ItemType = require("src/core/items/ItemType")
+
 function BarreInventaire:new(
         tailleMax
 )
@@ -7,8 +9,7 @@ function BarreInventaire:new(
         tailleMax = tailleMax,
         items = {},
         slotEquipe = {
-            itemType = "empty",
-            item = {}
+            itemType = ItemType.EMPTY
         }
     }
 
@@ -16,7 +17,7 @@ function BarreInventaire:new(
         local elements = {}
         for _ = 1, self.tailleMax do
             table.insert(elements, {
-                itemType = "empty"
+                itemType = ItemType.EMPTY
             })
         end
         return elements
@@ -34,6 +35,13 @@ function BarreInventaire:new(
             self.slotEquipe = item
             return true
         end
+    end
+
+    function this:removeOne(index)
+        table.remove(self.items, index)
+        self.items[index] = {
+            itemType = "empty"
+        }
     end
 
     function this:firstEmptySlot()

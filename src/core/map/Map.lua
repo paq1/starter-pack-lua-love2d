@@ -121,7 +121,9 @@ function Map:new(
                 position = { x = position.x, y = position.y },
                 power = power
             })
+            return true
         end
+        return false
     end
 
     function this:getTileAt(position)

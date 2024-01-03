@@ -8,8 +8,8 @@ local TreeCategory = require("src/core/map/TreeCategory")
 local Axe = require("src/core/items/tools/axe/Axe")
 local AxeEffect = require("src/core/items/tools/axe/AxeEffect")
 
-local Torch = require("src/core/items/tools/torch/Torch")
-local TorchEffect = require("src/core/items/tools/torch/TorchEffect")
+local Torch = require("src/core/items/consommable/torch/Torch")
+local TorchEffect = require("src/core/items/consommable/torch/TorchEffect")
 
 function MapService:new(
         map --[[Map]],
@@ -52,7 +52,8 @@ function MapService:new(
                 TorchEffect:new(this, this.playerService),
                 this.imageFactory,
                 this.rendererService,
-                {x = 32, y = 32 * 8}
+                {x = 32, y = 32 * 8},
+                10
         )
     }
 

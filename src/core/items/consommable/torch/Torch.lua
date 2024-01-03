@@ -7,21 +7,29 @@ function TorchItem:new(
         effect --[[TorchEffect]],
         imageFactory --[[ImageFactory]],
         rendererService --[[RendererService]],
-        position
+        position,
+        nombre
 )
     position = position or {}
+    nombre = nombre or 1
 
     local this = {
-        itemType = ItemType.TOOLS,
+        itemType = ItemType.CONSOMMABLES,
         position = position, -- n'apparait pas sur la map s'il n'a pas de position
         effect = effect,
         imageFactory = imageFactory,
-        rendererService = rendererService
+        rendererService = rendererService,
+        nombre = nombre
     }
 
     function this:apply(dt)
-        self.effect:apply(dt)
-        -- ne fait rien d'autre a part utiliser l'effet (n'a pas de durablilité ... etc)
+        if self.effect:apply(dt) then
+            self.nombre = self.nombre - 1
+        end
+    end
+
+    function this:needDelete()
+        return self.nombre <= 0
     end
 
     function this:getHitBox()
@@ -57,6 +65,21 @@ function TorchItem:new(
                         y = pPosition.y
                     },
                     scale
+            )
+            local color = {
+                r = 1,
+                g = 0,
+                b = 0,
+                a = 1
+            }
+            self.rendererService:print(
+                    self.nombre,
+                    {
+                        x = pPosition.x + 32,
+                        y = pPosition.y + 32
+                    },
+                    scale,
+                    color
             )
         end
     end

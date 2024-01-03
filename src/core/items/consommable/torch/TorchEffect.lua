@@ -16,7 +16,7 @@ function TorchEffect:new(
             y = (coordPlayer.y * self.mapService.map.tileSize) + 16
         }
 
-        self.mapService.map:addLight(playerPosition)
+        return self.mapService.map:addLight(playerPosition)
     end
 
     return this

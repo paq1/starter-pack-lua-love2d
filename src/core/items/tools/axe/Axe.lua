@@ -24,6 +24,10 @@ function AxeItem:new(
         -- ne fait rien d'autre a part utiliser l'effet (n'a pas de durablilité ... etc)
     end
 
+    function this:needDelete()
+        return false
+    end
+
     function this:getHitBox()
         if not self:existOnMap() then
             return {}
