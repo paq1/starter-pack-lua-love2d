@@ -96,7 +96,7 @@ function Game:new(
         self.mapService:render(debugMode)
         lightService:resetShader()
 
-        self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
+        self.inventaireService:draw(self.playerService.player.inventaire, 2.0)
         self.mapService:drawIndication()
 
         mouseService:draw()
