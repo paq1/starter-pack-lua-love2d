@@ -11,12 +11,16 @@ function ImageFactory:new()
         fullTree = love.graphics.newImage("assets/sprites/map/arbres/arbre_classique.png"),
         sapin = love.graphics.newImage("assets/sprites/map/arbres/sapin.png"),
         cursorTarget = love.graphics.newImage("assets/sprites/hud/cursorTarget.png"),
+        itemInventaire = love.graphics.newImage("assets/sprites/hud/itemInventairePart.png"),
+        itemAxe = love.graphics.newImage("assets/sprites/hud/items/axe.png"),
+        itemTorch = love.graphics.newImage("assets/sprites/hud/items/torche.png"),
 
         -- sprite sheet image
         snakeSpritesheet = love.graphics.newImage("assets/sprites/actor/Snake.png"),
         personnageSpritesheet = love.graphics.newImage("assets/sprites/actor/spitesheet_men_with_hair.png"),
         torcheSpritesheet = love.graphics.newImage("assets/sprites/map/torch_spritesheet.png"),
         tileForestSpriteSheetImage = love.graphics.newImage("assets/sprites/map/tiles/forest_ground_tilesheet.png"),
+        indicationSpriteSheetImage = love.graphics.newImage("assets/sprites/hud/indication_spritesheet.png")
     }
     -- sprite sheet obj
     this.tileForestSpriteSheet = SpriteSheet:new(

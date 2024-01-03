@@ -9,6 +9,9 @@ local ConfigMap = require("src/core/map/ConfigMap")
 local ConfigApp = require("src/core/ConfigApp")
 local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
+local ItemType = require("src/core/items/ItemType")
+local InventaireService = require("src/core/inventaire/InventaireService")
+local ItemSideEffectFactory = require("src/core/items/ItemSideEffectFactory")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -24,107 +27,112 @@ function Game:new(
         animationFactory --[[AnimationFactory]],
         perlinNoiseService --[[PerlinNoiseService]]
 )
-    local this = {
-        keyboardService = keyboardService,
-        rendererService = rendererService,
-        imageFactory = imageFactory,
-        animationService = animationService,
-        audioService = audioService,
-        randomService = randomService,
-        windowService = windowService,
-        mouseService = mouseService,
-        canvasService = canvasService,
-        lightService = lightService,
-        animationFactory = animationFactory,
-        perlinNoiseService = perlinNoiseService
-    }
-    this.cameraService = CameraService:new(this.windowService)
-    this.mouseService:setVisibility(false)
+    local this = {}
+    this.cameraService = CameraService:new(windowService)
+    this.inventaireService = InventaireService:new(
+            keyboardService,
+            rendererService,
+            windowService,
+            imageFactory
+    )
+    mouseService:setVisibility(false)
 
     local tailleUneImageDeLAnimation = 32
     local playerSize = { x = 32.0, y = 32.0 }
 
+    local player = Player:new(ConfigGame.positionInitialePlayer, playerSize)
+    local map = Map:new(
+            ConfigMap.size,
+            ConfigMap.tileSize,
+            randomService,
+            perlinNoiseService
+    )
+    local itemSideEffectFactory = ItemSideEffectFactory:new(map, player)
+
     this.playerService = PlayerService:new(
-            this.keyboardService,
-            this.animationService:createHorizontalAnimation(
-                    this.imageFactory.personnageSpritesheet,
+            keyboardService,
+            animationService:createHorizontalAnimation(
+                    imageFactory.personnageSpritesheet,
                     tailleUneImageDeLAnimation,
                     tailleUneImageDeLAnimation,
                     1
             ),
-            this.audioService,
+            audioService,
             this.cameraService,
-            Player:new(ConfigGame.positionInitialePlayer, playerSize)
+            player
     )
 
-
     this.mapService = MapService:new(
-            Map:new(
-                    ConfigMap.size,
-                    ConfigMap.tileSize,
-                    this.randomService,
-                    this.perlinNoiseService
-            ),
-            this.imageFactory,
-            this.rendererService,
-            this.audioService,
+            map,
+            imageFactory,
+            rendererService,
+            audioService,
             this.playerService,
             this.cameraService,
-            this.canvasService,
-            this.animationFactory
+            canvasService,
+            animationFactory,
+            itemSideEffectFactory
     )
 
     function this:update(dt)
-        self.audioService:update()
+        audioService:update()
 
+        self:playerCanUseEquippedItem(dt)
+        self:playerCanTakeItemOnMap()
 
-        self:updatePlayerDestroyTrees()
-        self:updatePlayerPutLight()
-
-        self.playerService:update(dt, this.mapService.map)
+        self.playerService:update(dt, self.mapService.map)
         self.mapService:update(dt)
+
+        self.inventaireService:update(dt, self.playerService.player.inventaire)
+
 
         return ScenesName.NONE
     end
 
-    function this:draw()
-        self.lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
-        self.mapService:render()
-        self.lightService:resetShader()
+    function this:draw(debugMode)
 
-        self.mouseService:draw()
+        debugMode = debugMode or false
+
+        lightService:drawNightMod(self.mapService.map.lights, self.cameraService.position)
+        self.mapService:render(debugMode)
+        lightService:resetShader()
+
+        self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
+        self.mapService:drawIndication()
+
+        mouseService:draw()
         if ConfigApp.debug then
-            self.mapService:printCurrentCoordPlayerOnMap({ x = self.windowService:getCenter().x, y = 0 }, self.playerService.player)
+            self.mapService:printCurrentCoordPlayerOnMap({ x = windowService:getCenter().x, y = 0 }, self.playerService.player)
             self:printNbLight({ x = 0, y = 64 })
         end
     end
 
-    function this:updatePlayerDestroyTrees()
-        if self.mouseService:leftButtonIsPressed() then
-            local footPlayer = {
-                x = self.playerService.player.position.x,
-                y = self.playerService.player.position.y + 16
-            }
-            local coordPlayer = self.mapService.map:getCoordTile(footPlayer)
-            self.mapService.map.firstLayout[coordPlayer.y + 1][coordPlayer.x + 1] = {}
+    function this:playerCanUseEquippedItem(dt)
+        if mouseService:leftButtonIsPressed() then
+            local item = self.playerService.player.inventaire.slotEquipe
+            if item.itemType ~= ItemType.EMPTY then
+                item:apply(dt)
+            end
         end
     end
 
-    function this:updatePlayerPutLight()
-        local coordPlayer = self.mapService.map:getCoordTile(self.playerService.player.position)
-        local playerPosition = {
-            x = (coordPlayer.x * self.mapService.map.tileSize) + 16,
-            y = (coordPlayer.y * self.mapService.map.tileSize) + 16
-        }
-
-        if self.keyboardService:actionKeyIsDown() then
-            self.mapService.map:addLight(playerPosition)
+    function this:playerCanTakeItemOnMap()
+        local playerHitBox = self.playerService.player:getHitBox()
+        for index, item in pairs(self.mapService.items) do
+            local itemHitBox = item:getHitBox()
+            if playerHitBox:collide(itemHitBox) then
+                local successAdd = self.playerService.player.inventaire:addItem(self.mapService.items[index])
+                if successAdd then
+                    self.mapService.items[index].position = {} -- disparait de la map
+                    table.remove(self.mapService.items, index)
+                end
+            end
         end
     end
 
     function this:printNbLight(at)
         at = at or { x = 0, y = 0 }
-        self.rendererService:print("lights : " .. #self.mapService.map.lights, at)
+        rendererService:print("lights : " .. #self.mapService.map.lights, at)
     end
 
     return this

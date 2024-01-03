@@ -3,9 +3,7 @@ local MouseService = {}
 function MouseService:new(
         imageFactory --[[ImageFactory]]
 )
-    local this = {
-        imageFactory = imageFactory
-    }
+    local this = {}
 
     function this:getPosition()
         return love.mouse.getPosition()
@@ -31,7 +29,7 @@ function MouseService:new(
         local x, y = this:getPosition()
         local imageCursorSize = 32.0
         local offsetMouse = imageCursorSize / 2.0
-        love.graphics.draw(self.imageFactory.cursorTarget, x - offsetMouse, y - offsetMouse)
+        love.graphics.draw(imageFactory.cursorTarget, x - offsetMouse, y - offsetMouse)
     end
 
     return this

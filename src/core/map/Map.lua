@@ -23,13 +23,11 @@ function Map:new(
     local this = {
         size = size,
         tileSize = tileSize,
-        defaultLightPower = ConfigMap.torchBasePower,
-        randomService = randomService,
-        perlinNoiseService = perlinNoiseService
+        defaultLightPower = ConfigMap.torchBasePower
     }
 
     function this:loadMap()
-        return TilemapGenerator.generateTilemap(self.size, self.randomService, self.perlinNoiseService)
+        return TilemapGenerator.generateTilemap(self.size, randomService, perlinNoiseService)
     end
 
 
@@ -121,7 +119,9 @@ function Map:new(
                 position = { x = position.x, y = position.y },
                 power = power
             })
+            return true
         end
+        return false
     end
 
     function this:getTileAt(position)

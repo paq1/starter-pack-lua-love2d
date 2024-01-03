@@ -11,11 +11,8 @@ function PlayerService:new(
         player --[[Player]]
 )
     local this = {
-        inputService = inputService,
         sideIndex = 0,
         anim = animation,
-        audioService = audioService,
-        cameraService = cameraService,
         player = player
     }
 
@@ -25,18 +22,40 @@ function PlayerService:new(
     )
         self.anim:update(dt, false)
 
-        local seDeplace = self:updateDeplacement(dt, 200, map)
-
-        if seDeplace then
-            self.audioService:setStepSongStatus(true)
+        if self:updateDeplacement(dt, 200, map) then
+            audioService:setStepSongStatus(true)
         else
-            self.audioService:setStepSongStatus(false)
+            audioService:setStepSongStatus(false)
         end
 
-        self.cameraService:updatePosition({
+        cameraService:updatePosition({
             x = self.player.position.x * ConfigGame.scale,
             y = self.player.position.y * ConfigGame.scale
         })
+    end
+
+    function this:draw(debugMode)
+
+        debugMode = debugMode or false
+
+        local drawPos = self:playerDrawingPosition(cameraService)
+        self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
+
+        if debugMode then
+            local camPos = cameraService.position
+            local hitbox = player:getHitBox()
+            local position = hitbox.position
+            local w, h = hitbox.size.width, hitbox.size.height
+
+            -- MKDMKD fixme mettre ca dans un service
+            love.graphics.rectangle(
+                    "line",
+                    (position.x * ConfigGame.scale) - camPos.x,
+                    position.y * ConfigGame.scale - camPos.y,
+                    w * ConfigGame.scale,
+                    h * ConfigGame.scale
+            )
+        end
     end
 
     -- return true si le joueur a bougé sinon false
@@ -61,30 +80,30 @@ function PlayerService:new(
     -- return true si le joueur a bougé sinon false
     function this:updateDeplacement(dt, vitesse, map --[[Map]])
         vitesse = vitesse or 200.0
-        if (self.inputService.ctrlIsDown()) then
+        if (inputService.ctrlIsDown()) then
             vitesse = vitesse + 150.0
         end
         local seDeplace = false
 
-        if self.inputService:upIsDown() then
+        if inputService:upIsDown() then
             --self.sideIndex = 2
             local isMoving = self:movingPlayer({ x = 0, y = - vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:rightIsDown() then
+        if inputService:rightIsDown() then
             self.sideIndex = 0
             local isMoving = self:movingPlayer({ x = vitesse * dt, y = 0}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:downIsDown() then
+        if inputService:downIsDown() then
             --self.sideIndex = 3
             local isMoving = self:movingPlayer({ x = 0, y = vitesse * dt}, map)
             if isMoving then seDeplace = true end
         end
 
-        if self.inputService:leftIsDown() then
+        if inputService:leftIsDown() then
             self.sideIndex = 1
             local isMoving = self:movingPlayer({ x = - vitesse * dt, y = 0}, map)
             if isMoving then seDeplace = true end
@@ -95,14 +114,9 @@ function PlayerService:new(
 
     function this:playerDrawingPosition()
         return {
-            x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - self.cameraService.position.x,
-            y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - self.cameraService.position.y
+            x = (self.player.position.x - self.player.size.x / 2.0) * ConfigGame.scale - cameraService.position.x,
+            y = (self.player.position.y - self.player.size.y / 2.0) * ConfigGame.scale - cameraService.position.y
         }
-    end
-
-    function this:draw()
-        local drawPos = self:playerDrawingPosition(self.cameraService)
-        self.anim:draw(self.sideIndex, drawPos, ConfigGame.scale)
     end
 
     return this

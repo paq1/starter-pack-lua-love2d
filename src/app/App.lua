@@ -31,7 +31,7 @@ function drawMiddleLine()
 end
 
 function App.draw()
-    components.scenesService:draw()
+    components.scenesService:draw(debugMode)
 
     if debugMode then
         printFps()

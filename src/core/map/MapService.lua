@@ -5,6 +5,9 @@ local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
 local TreeCategory = require("src/core/map/TreeCategory")
 
+local Axe = require("src/core/items/tools/axe/Axe")
+local Torch = require("src/core/items/consommable/torch/Torch")
+
 function MapService:new(
         map --[[Map]],
         imageFactory --[[ImageFactory]],
@@ -13,45 +16,106 @@ function MapService:new(
         playerService --[[PlayerService]],
         cameraService --[[CameraService]],
         canvasService --[[CanvasService]],
-        animationFactory --[[AnimationFactory]]
+        animationFactory --[[AnimationFactory]],
+        itemSideEffectFactory --[[ItemSideEffectFactory]]
 )
     local this = {
         map = map,
-        imageFactory = imageFactory,
-        rendererService = rendererService,
-        audioService = audioService,
-        playerService = playerService,
-        cameraService = cameraService,
-        canvasService = canvasService,
-        animationFactory = animationFactory,
         ordoringElements = {}
     }
 
-    this.canvasTilemap = this.canvasService:fromMapToTilemapCanvas(map)
+    this.canvasTilemap = canvasService:fromMapToTilemapCanvas(map)
+
+    this.items = {
+        Axe:new(
+                itemSideEffectFactory:getEffect("axe"),
+                imageFactory,
+                rendererService,
+                 {x = 32, y = 32 * 5}
+        ),
+        Axe:new(
+                itemSideEffectFactory:getEffect("axe"),
+                imageFactory,
+                rendererService,
+                {x = 32, y = 32 * 7}
+        ),
+        Torch:new(
+                itemSideEffectFactory:getEffect("torch"),
+                imageFactory,
+                rendererService,
+                {x = 32, y = 32 * 8},
+                10
+        ),
+        Torch:new(
+                itemSideEffectFactory:getEffect("torch"),
+                imageFactory,
+                rendererService,
+                {x = 32, y = 32 * 9},
+                10
+        )
+    }
 
     function this:update(dt)
-        self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
-        self.animationFactory.torcheAnimation:update(dt)
+        audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
+        animationFactory.torcheAnimation:update(dt)
+        animationFactory.indicationAnimation:update(dt)
 
+        -- on tri les elements à afficher
         local elements = self:getElementsForDraw()
         self.ordoringElements = elements
         table.sort(self.ordoringElements, compareElement)
     end
 
-    function this:render()
-        local camPos = self.cameraService.position
+    function this:render(debugMode)
 
-        self.rendererService:render(
+        debugMode = debugMode or false
+
+        local camPos = cameraService.position
+
+        rendererService:render(
                 self.canvasTilemap,
                 { x = -camPos.x, y = -camPos.y },
                 ConfigGame.scale
         )
-        self:renderElements(camPos)
+        self:renderElements(camPos, debugMode)
+
+        -- todo les afficher dans l'ordre
+        -- affichage des items sur la map
+        for _,item in pairs(self.items) do
+            item:draw(camPos, ConfigGame.scale)
+            -- todo decommenter si on veut voir les hitboxes des items
+            if debugMode then
+                local hitbox = item:getHitBox()
+                local position = hitbox.position
+                local w, h = hitbox.size.width, hitbox.size.height
+
+                -- MKDMKD fixme wrapper le rectangle dans un service
+                love.graphics.rectangle(
+                        "line",
+                        (position.x * ConfigGame.scale) - camPos.x,
+                        ( position.y * ConfigGame.scale) - camPos.y,
+                        w * ConfigGame.scale,
+                        h * ConfigGame.scale
+                )
+            end
+        end
+    end
+
+    function this:drawIndication()
+        local camPos = cameraService.position
+
+        for _,item in pairs(self.items) do
+            local position = item.position
+            animationFactory.indicationAnimation:draw(0, {
+                x = (position.x) * ConfigGame.scale - camPos.x,
+                y = (position.y - 32) * ConfigGame.scale - camPos.y
+            }, ConfigGame.scale)
+        end
     end
 
 
     function this:minRowAndCol(offset)
-        local playerPos = self.playerService.player.position
+        local playerPos = playerService.player.position
 
         local minRow = math.floor(playerPos.y / self.map.tileSize) - offset
         local minCol = math.floor(playerPos.x / self.map.tileSize) - offset
@@ -63,7 +127,7 @@ function MapService:new(
     end
 
     function this:maxRowAndCol(offset)
-        local playerPos = self.playerService.player.position
+        local playerPos = playerService.player.position
         local maxRowPlayer = math.floor(playerPos.y / self.map.tileSize) + offset
         local maxColPlayer = math.floor(playerPos.x / self.map.tileSize) + offset
         local maxRowFromMap = #self.map.tilemap
@@ -122,8 +186,8 @@ function MapService:new(
 
 
         local playerPosition = {
-            x = self.playerService.player.position.x,
-            y = self.playerService.player.position.y
+            x = playerService.player.position.x,
+            y = playerService.player.position.y
         }
         table.insert(elements, {position = playerPosition, elementType = ElementType.PLAYER})
 
@@ -134,7 +198,10 @@ function MapService:new(
         return element1.position.y < element2.position.y
     end
 
-    function this:renderElements(camPos)
+    function this:renderElements(camPos, debugMode)
+
+        debugMode = debugMode or false
+
         local heightSizeOfTree = 64.0
         local offsetTreeY = heightSizeOfTree / 2.0
         local offsetBasiqueElement = (16 * ConfigGame.scale)
@@ -148,13 +215,13 @@ function MapService:new(
             if element.elementType == ElementType.ARBRE then
 
                 local arbreType = element.arbreType
-                local imageArbre = self.imageFactory.fullTree
+                local imageArbre = imageFactory.fullTree
 
                 if arbreType == TreeCategory.SAPIN then
-                    imageArbre = self.imageFactory.sapin
+                    imageArbre = imageFactory.sapin
                 end
 
-                self.rendererService:render(
+                rendererService:render(
                         imageArbre,
                         { x = drawingPosition.x, y = drawingPosition.y - (offsetTreeY * ConfigGame.scale + offsetBasiqueElement) },
                         ConfigGame.scale
@@ -162,7 +229,7 @@ function MapService:new(
             end
 
             if element.elementType == ElementType.PLAYER then
-                self.playerService:draw(cameraService)
+                playerService:draw(debugMode)
             end
 
             if element.elementType == ElementType.TORCHE then
@@ -170,7 +237,7 @@ function MapService:new(
                     x = drawingPosition.x - offsetBasiqueElement,
                     y = drawingPosition.y - offsetBasiqueElement
                 }
-                self.animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
+                animationFactory.torcheAnimation:draw(0, torchePosition, ConfigGame.scale)
             end
         end
     end
@@ -184,7 +251,7 @@ function MapService:new(
         }
         local coord = self.map:getCoordTile(footPosition)
 
-        self.rendererService:print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", { x = at.x, y = at.y })
+        rendererService:print("current tile : (" .. coord.x .. ", " .. coord.y .. ")", { x = at.x, y = at.y })
     end
 
     return this

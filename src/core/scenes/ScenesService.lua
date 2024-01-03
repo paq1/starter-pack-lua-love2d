@@ -19,46 +19,33 @@ function ScenesService:new(
         animationFactory --[[AnimationFactory]],
         perlinNoiseService --[[PerlinNoiseService]]
 )
-    local this = {
-        keyboardService = keyboardService,
-        rendererService = rendererService,
-        imageFactory = imageFactory,
-        animationService = animationService,
-        audioService = audioService,
-        randomService = randomService,
-        windowService = windowService,
-        mouseService = mouseService,
-        canvasService = canvasService,
-        lightService = lightService,
-        animationFactory = animationFactory,
-        perlinNoiseService = perlinNoiseService
-    }
+    local this = {}
 
     this.scenes = {
         [ScenesName.MENU] = Menu:new(
-                this.keyboardService,
-                this.rendererService,
-                this.imageFactory,
-                this.animationService,
-                this.audioService,
-                this.randomService,
-                this.windowService,
-                this.mouseService,
-                this.canvasService
+                keyboardService,
+                rendererService,
+                imageFactory,
+                animationService,
+                audioService,
+                randomService,
+                windowService,
+                mouseService,
+                canvasService
         ),
         [ScenesName.GAME] = Game:new(
-                this.keyboardService,
-                this.rendererService,
-                this.imageFactory,
-                this.animationService,
-                this.audioService,
-                this.randomService,
-                this.windowService,
-                this.mouseService,
-                this.canvasService,
-                this.lightService,
-                this.animationFactory,
-                this.perlinNoiseService
+                keyboardService,
+                rendererService,
+                imageFactory,
+                animationService,
+                audioService,
+                randomService,
+                windowService,
+                mouseService,
+                canvasService,
+                lightService,
+                animationFactory,
+                perlinNoiseService
         ),
         [ScenesName.OPTIONS] = Options:new()
     }
@@ -73,8 +60,9 @@ function ScenesService:new(
         end
     end
 
-    function this:draw()
-        self.scenes[this.currentScene]:draw()
+    function this:draw(debugMode)
+        debugMode = debugMode or false
+        self.scenes[self.currentScene]:draw(debugMode)
     end
 
     return this
