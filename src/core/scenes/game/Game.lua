@@ -103,6 +103,7 @@ function Game:new(
         self.lightService:resetShader()
 
         self.inventaireService:draw(self.playerService.player.inventaire, ConfigGame.scale)
+        self.mapService:drawIndication()
 
         self.mouseService:draw()
         if ConfigApp.debug then

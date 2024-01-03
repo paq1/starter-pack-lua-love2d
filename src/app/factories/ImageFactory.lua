@@ -20,6 +20,7 @@ function ImageFactory:new()
         personnageSpritesheet = love.graphics.newImage("assets/sprites/actor/spitesheet_men_with_hair.png"),
         torcheSpritesheet = love.graphics.newImage("assets/sprites/map/torch_spritesheet.png"),
         tileForestSpriteSheetImage = love.graphics.newImage("assets/sprites/map/tiles/forest_ground_tilesheet.png"),
+        indicationSpriteSheetImage = love.graphics.newImage("assets/sprites/hud/indication_spritesheet.png")
     }
     -- sprite sheet obj
     this.tileForestSpriteSheet = SpriteSheet:new(

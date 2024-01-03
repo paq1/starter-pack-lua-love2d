@@ -67,6 +67,7 @@ function MapService:new(
     function this:update(dt)
         self.audioService:setBirdSoundEffectStatus(true) -- mettre en fct de l'environement du joueur
         self.animationFactory.torcheAnimation:update(dt)
+        self.animationFactory.indicationAnimation:update(dt)
 
         local elements = self:getElementsForDraw()
         self.ordoringElements = elements
@@ -89,13 +90,24 @@ function MapService:new(
         -- affichage des items sur la map
         for _,item in pairs(self.items) do
             item:draw(camPos, ConfigGame.scale)
-
             -- todo decommenter si on veut voir les hitboxes des items
             --local hitbox = item:getHitBox()
             --local position = hitbox.position
             --local w, h = hitbox.size.width, hitbox.size.height
             --love.graphics.rectangle("fill", (position.x * ConfigGame.scale) - camPos.x,( position.y * ConfigGame.scale) - camPos.y, w * ConfigGame.scale, h * ConfigGame.scale)
 
+        end
+    end
+
+    function this:drawIndication()
+        local camPos = self.cameraService.position
+
+        for _,item in pairs(self.items) do
+            local position = item.position
+            self.animationFactory.indicationAnimation:draw(0, {
+                x = (position.x) * ConfigGame.scale - camPos.x,
+                y = (position.y - 32) * ConfigGame.scale - camPos.y
+            }, ConfigGame.scale)
         end
     end
 
