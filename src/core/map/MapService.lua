@@ -5,8 +5,8 @@ local ConfigGame = require("src/core/scenes/game/ConfigGame")
 local ElementType = require("src/core/elements/ElementType")
 local TreeCategory = require("src/core/map/TreeCategory")
 
-local Axe = require("src/core/items/tools/Axe")
-local AxeEffect = require("src/core/items/tools/AxeEffect")
+local Axe = require("src/core/items/tools/axe/Axe")
+local AxeEffect = require("src/core/items/tools/axe/AxeEffect")
 
 function MapService:new(
         map --[[Map]],

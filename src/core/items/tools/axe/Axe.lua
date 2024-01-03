@@ -1,5 +1,7 @@
 local AxeItem = {}
 
+local ItemType = require("src/core/items/ItemType")
+
 function AxeItem:new(
         effect --[[AxeEffect]],
         imageFactory --[[ImageFactory]],
@@ -9,7 +11,7 @@ function AxeItem:new(
     position = position or {}
 
     local this = {
-        itemType = "tools",
+        itemType = ItemType.TOOLS,
         position = position, -- n'apparait pas sur la map s'il n'a pas de position
         effect = effect,
         imageFactory = imageFactory,

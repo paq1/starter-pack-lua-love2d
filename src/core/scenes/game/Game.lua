@@ -9,6 +9,7 @@ local ConfigMap = require("src/core/map/ConfigMap")
 local ConfigApp = require("src/core/ConfigApp")
 local Player = require("src/core/actor/player/Player")
 local ScenesName = require("src/core/scenes/ScenesName")
+local ItemType = require("src/core/items/ItemType")
 
 function Game:new(
         keyboardService --[[KeyboardService]],
@@ -133,7 +134,7 @@ function Game:new(
                     ConfigGame.scale
             )
 
-            if item.itemType ~= "empty" then
+            if item.itemType ~= ItemType.EMPTY then
                 item:drawInInventaire(position, ConfigGame.scale)
             end
         end
@@ -154,7 +155,7 @@ function Game:new(
                 ConfigGame.scale
         )
 
-        if item.itemType ~= "empty" then
+        if item.itemType ~= ItemType.EMPTY then
             item:drawInInventaire(position, ConfigGame.scale)
         end
 
