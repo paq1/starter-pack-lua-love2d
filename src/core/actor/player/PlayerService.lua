@@ -8,7 +8,8 @@ function PlayerService:new(
         animation --[[Animation]],
         audioService --[[AudioService]],
         cameraService --[[CameraService]],
-        player --[[Player]]
+        player --[[Player]],
+        rendererService --[[RendererService]]
 )
     local this = {
         sideIndex = 0,
@@ -47,13 +48,16 @@ function PlayerService:new(
             local position = hitbox.position
             local w, h = hitbox.size.width, hitbox.size.height
 
-            -- MKDMKD fixme mettre ca dans un service
-            love.graphics.rectangle(
+            rendererService:drawRectangle(
                     "line",
-                    (position.x * ConfigGame.scale) - camPos.x,
-                    position.y * ConfigGame.scale - camPos.y,
-                    w * ConfigGame.scale,
-                    h * ConfigGame.scale
+                    {
+                        x = position.x * ConfigGame.scale - camPos.x,
+                        y = position.y * ConfigGame.scale - camPos.y
+                    },
+                    {
+                        width = w * ConfigGame.scale,
+                        height = h * ConfigGame.scale
+                    }
             )
         end
     end

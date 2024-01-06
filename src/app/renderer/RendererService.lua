@@ -22,6 +22,16 @@ function RendererService:new()
         love.graphics.setColor(defaultColor.r, defaultColor.g, defaultColor.b, defaultColor.a)
     end
 
+    function this:drawRectangle(mode, position, size)
+        love.graphics.rectangle(
+                mode,
+                position.x,
+                position.y,
+                size.width,
+                size.height
+        )
+    end
+
     return this
 end
 

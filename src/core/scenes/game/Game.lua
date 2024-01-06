@@ -58,7 +58,8 @@ function Game:new(
             ),
             audioService,
             this.cameraService,
-            player
+            player,
+            rendererService
     )
 
     this.mapService = MapService:new(
